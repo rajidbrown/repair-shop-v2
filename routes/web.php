@@ -13,11 +13,16 @@ use App\Http\Controllers\Customer\DiagnosticsController;
 // Landing page
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 // Static pages
 Route::view('/about', 'about')->name('about');
-Route::view('/faq', 'faq')->name('faq'); // ✅ FAQ route added
+Route::view('/faq', 'faq')->name('faq');
+Route::view('/offerings', 'offerings')->name('offerings'); // ✅ Added
+Route::view('/register', 'auth.register')->name('register'); // ✅ Added
+Route::view('/login/customer', 'auth.login_customer')->name('login.customer'); // ✅ Added
+Route::view('/login/mechanic', 'auth.login_mechanic')->name('login.mechanic'); // ✅ Added
+Route::view('/login/admin', 'auth.login_admin')->name('login.admin'); // ✅ Added
 
 // Admin - Dashboard
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
