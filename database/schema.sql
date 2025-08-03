@@ -1,0 +1,123 @@
+
+-- SQLite-Compatible Schema for Shaded Motorworks
+PRAGMA foreign_keys = ON;
+-- Admins Table
+CREATE TABLE IF NOT EXISTS Admins (
+  AdminID INTEGER PRIMARY KEY AUTOINCREMENT,
+  Username TEXT NOT NULL UNIQUE,
+  Password TEXT NOT NULL,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Appointments Table
+CREATE TABLE IF NOT EXISTS Appointments (
+  AppointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
+  CustomerID INTEGER NOT NULL,
+  MechanicID INTEGER NOT NULL,
+  ServiceID INTEGER NOT NULL,
+  AppointmentDateTime TEXT NOT NULL,
+  Notes TEXT,
+  CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  Status TEXT NOT NULL DEFAULT 'Not Started',
+  BikeID INTEGER,
+  Diagnostics TEXT,
+  FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+  FOREIGN KEY (MechanicID) REFERENCES Mechanics(MechanicID),
+  FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID),
+  FOREIGN KEY (BikeID) REFERENCES Bikes(BikeID)
+);
+
+-- Bikes Table
+CREATE TABLE IF NOT EXISTS Bikes (
+  BikeID INTEGER PRIMARY KEY AUTOINCREMENT,
+  CustomerID INTEGER NOT NULL,
+  Year INTEGER,
+  Make TEXT,
+  Model TEXT,
+  Mileage INTEGER,
+  CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Customers Table
+CREATE TABLE IF NOT EXISTS Customers (
+  CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+  FirstName TEXT NOT NULL,
+  LastName TEXT NOT NULL,
+  Email TEXT NOT NULL UNIQUE,
+  Password TEXT NOT NULL,
+  PhoneNumber TEXT,
+  Address TEXT,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Diagnostics Table
+CREATE TABLE IF NOT EXISTS Diagnostics (
+  DiagnosticID INTEGER PRIMARY KEY AUTOINCREMENT,
+  AppointmentID INTEGER NOT NULL,
+  MechanicID INTEGER NOT NULL,
+  IssueFound TEXT,
+  Recommendation TEXT,
+  CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID),
+  FOREIGN KEY (MechanicID) REFERENCES Mechanics(MechanicID)
+);
+
+-- Invoices Table
+CREATE TABLE IF NOT EXISTS Invoices (
+  InvoiceID INTEGER PRIMARY KEY AUTOINCREMENT,
+  CustomerID INTEGER NOT NULL,
+  DateIssued TEXT NOT NULL,
+  TotalAmount REAL NOT NULL,
+  Description TEXT,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Jobs Table (for Laravel queues)
+CREATE TABLE IF NOT EXISTS jobs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  queue TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  attempts INTEGER NOT NULL,
+  reserved_at INTEGER,
+  available_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+-- Mechanics Table
+CREATE TABLE IF NOT EXISTS Mechanics (
+  MechanicID INTEGER PRIMARY KEY AUTOINCREMENT,
+  FirstName TEXT NOT NULL,
+  LastName TEXT NOT NULL,
+  Email TEXT NOT NULL UNIQUE,
+  Password TEXT NOT NULL,
+  Specialty TEXT,
+  PhoneNumber TEXT,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Schedule Table
+CREATE TABLE IF NOT EXISTS Schedule (
+  ScheduleID INTEGER PRIMARY KEY AUTOINCREMENT,
+  MechanicID INTEGER NOT NULL,
+  DayOfWeek TEXT NOT NULL,
+  StartTime TEXT NOT NULL,
+  EndTime TEXT NOT NULL,
+  UNIQUE(MechanicID, DayOfWeek, StartTime),
+  FOREIGN KEY (MechanicID) REFERENCES Mechanics(MechanicID)
+);
+
+-- Services Table
+CREATE TABLE IF NOT EXISTS Services (
+  ServiceID INTEGER PRIMARY KEY AUTOINCREMENT,
+  ServiceName TEXT NOT NULL UNIQUE,
+  Description TEXT,
+  Price REAL,
+  DurationMinutes INTEGER
+);
