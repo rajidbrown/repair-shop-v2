@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
+use App\Http\Controllers\Customer\CustomerInvoiceController; // ✅ Added
 
 // Landing page
 Route::get('/', function () {
@@ -50,3 +51,6 @@ Route::post('/customer/book-appointment', [BookAppointmentController::class, 'st
 
 // Customer - Diagnostics
 Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
+
+// ✅ Customer - Invoices
+Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
