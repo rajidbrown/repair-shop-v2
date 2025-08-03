@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
-use App\Http\Controllers\Customer\DiagnosticsController; // ✅ ADDED
+use App\Http\Controllers\Customer\DiagnosticsController;
 
 // Landing page
 Route::get('/', function () {
@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 // Static pages
 Route::view('/about', 'about')->name('about');
+Route::view('/faq', 'faq')->name('faq'); // ✅ FAQ route added
 
 // Admin - Dashboard
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
@@ -42,5 +43,5 @@ Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
 Route::get('/customer/book-appointment', [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
 Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
 
-// Customer - Diagnostics ✅ ADDED
+// Customer - Diagnostics
 Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
