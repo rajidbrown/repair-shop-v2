@@ -10,6 +10,7 @@ use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
 use App\Http\Controllers\Customer\CustomerInvoiceController; // ✅ Added
+use App\Http\Controllers\Admin\AdminLoginController;
 
 // Landing page
 Route::get('/', function () {
@@ -24,6 +25,7 @@ Route::view('/register', 'auth.register')->name('register'); // ✅ Added
 Route::view('/login/customer', 'auth.login_customer')->name('login.customer'); // ✅ Added
 Route::view('/login/mechanic', 'auth.login_mechanic')->name('login.mechanic'); // ✅ Added
 Route::view('/login/admin', 'auth.login_admin')->name('login.admin'); // ✅ Added
+Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
 // Admin - Dashboard
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
@@ -50,7 +52,4 @@ Route::get('/customer/book-appointment', [BookAppointmentController::class, 'sho
 Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
 
 // Customer - Diagnostics
-Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
-
-// ✅ Customer - Invoices
-Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
+Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('custome
