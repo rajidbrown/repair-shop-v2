@@ -76,8 +76,4 @@ Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])
 Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
 Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
-Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
-Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
-
-// Shared Logout
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+Route::get('/mechanic/todo', [MechanicTodoController
