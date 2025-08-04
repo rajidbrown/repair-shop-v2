@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
-
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
@@ -63,3 +63,6 @@ Route::post('/customer/book-appointment', [BookAppointmentController::class, 'st
 Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
 
 Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
+
+// Logout 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
