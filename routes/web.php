@@ -19,6 +19,7 @@ use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
 use App\Http\Controllers\Customer\CustomerInvoiceController;
 use App\Http\Controllers\Customer\CustomerLoginController;
+use App\Http\Controllers\Customer\BikeController;
 
 // Mechanic Controllers
 use App\Http\Controllers\Mechanic\MechanicLoginController;
@@ -67,6 +68,8 @@ Route::get('/customer/book-appointment', [BookAppointmentController::class, 'sho
 Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
 Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
 Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
+Route::get('/customer/my-bike', [BikeController::class, 'showForm'])->name('customer.my_bike');
+Route::post('/customer/my-bike', [BikeController::class, 'update'])->name('customer.my_bike.update');
 
 // Mechanic Routes
 Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
