@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Admin Controllers
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
@@ -8,17 +10,21 @@ use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
 
+// Auth
 use App\Http\Controllers\Auth\LogoutController;
 
+// Customer Controllers
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
 use App\Http\Controllers\Customer\CustomerInvoiceController;
 use App\Http\Controllers\Customer\CustomerLoginController;
 
+// Mechanic Controllers
 use App\Http\Controllers\Mechanic\MechanicLoginController;
 use App\Http\Controllers\Mechanic\MechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
+use App\Http\Controllers\Mechanic\ServiceHistoryController;
 
 // Landing Page
 Route::get('/', function () {
@@ -65,6 +71,7 @@ Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->na
 Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
 Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
 Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
+Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
 
 // Shared Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
