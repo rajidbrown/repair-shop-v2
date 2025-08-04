@@ -7,7 +7,9 @@ use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
-use App\Http\Controllers\Auth\AuthController;
+
+use App\Http\Controllers\Auth\LogoutController;
+
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\Customer\CustomerInvoiceController;
 use App\Http\Controllers\Customer\CustomerLoginController;
 
 use App\Http\Controllers\Mechanic\MechanicLoginController;
+use App\Http\Controllers\Mechanic\MechanicDashboardController;
 
 // Landing Page
 Route::get('/', function () {
@@ -43,26 +46,16 @@ Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin
 
 // Admin Routes
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-
 Route::get('/admin/add-mechanic', [AddMechanicController::class, 'showForm'])->name('admin.add_mechanic.form');
 Route::post('/admin/add-mechanic', [AddMechanicController::class, 'store'])->name('admin.add_mechanic.store');
-
 Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])->name('admin.invoices');
-
 Route::get('/admin/appointments/upcoming', [UpcomingAppointmentsController::class, 'index'])->name('admin.appointments.upcoming');
-
 Route::get('/admin/schedule/create', [ScheduleController::class, 'showForm'])->name('admin.schedule.form');
 Route::post('/admin/schedule/create', [ScheduleController::class, 'store'])->name('admin.schedule.store');
 
 // Customer Routes
 Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
-
 Route::get('/customer/book-appointment', [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
 Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
-
 Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
-
-Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
-
-// Logout 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Ro
