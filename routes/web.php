@@ -10,8 +10,9 @@ use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
 
-// Auth Controller
+// Auth Controllers
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 
 // Customer Controllers
 use App\Http\Controllers\Customer\BookAppointmentController;
@@ -40,6 +41,7 @@ Route::view('/offerings', 'offerings')->name('offerings');
 
 // Auth Routes
 Route::view('/register', 'auth.register')->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
 // Customer Auth
 Route::view('/login/customer', 'auth.login_customer')->name('login.customer');
@@ -76,4 +78,8 @@ Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])
 Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
 Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
-Route::get('/mechanic/todo', [MechanicTodoController
+Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
+Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
+
+// Shared Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
