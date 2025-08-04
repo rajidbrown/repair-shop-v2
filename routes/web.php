@@ -18,6 +18,7 @@ use App\Http\Controllers\Customer\CustomerLoginController;
 
 use App\Http\Controllers\Mechanic\MechanicLoginController;
 use App\Http\Controllers\Mechanic\MechanicDashboardController;
+use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
 
 // Landing Page
 Route::get('/', function () {
@@ -58,4 +59,12 @@ Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
 Route::get('/customer/book-appointment', [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
 Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
 Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
-Ro
+Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
+
+// Mechanic Routes
+Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
+Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
+Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
+
+// Shared Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
