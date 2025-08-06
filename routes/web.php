@@ -74,6 +74,7 @@ Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->na
 Route::get('/customer/my-bike', [BikeController::class, 'showForm'])->name('customer.my_bike');
 Route::post('/customer/my-bike', [BikeController::class, 'update'])->name('customer.my_bike.update');
 Route::get('/customer/service-history', [CustomerServiceHistoryController::class, 'index'])->name('customer.service_history');
+Route::view('/customer/settings', 'customer.settings')->name('customer.settings');
 
 // Mechanic Routes
 Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
@@ -81,4 +82,7 @@ Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'inde
 Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
 Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
-Route::pos
+Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
+
+// Shared Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
