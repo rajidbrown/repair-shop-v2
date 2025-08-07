@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Mechanic\UpcomingAppointmentsController;
 
 // Auth Controllers
 use App\Http\Controllers\Auth\LogoutController;
@@ -83,6 +84,4 @@ Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'sto
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
 Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
 Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
-
-// Shared Logout
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+Route::get('/mechanic/upcomi
