@@ -23,6 +23,7 @@ use App\Http\Controllers\Customer\CustomerInvoiceController;
 use App\Http\Controllers\Customer\CustomerLoginController;
 use App\Http\Controllers\Customer\BikeController;
 use App\Http\Controllers\Customer\CustomerServiceHistoryController;
+use App\Http\Controllers\Customer\CustomerInfoController;
 
 // Mechanic Controllers
 use App\Http\Controllers\Mechanic\MechanicLoginController;
@@ -76,6 +77,8 @@ Route::get('/customer/my-bike', [BikeController::class, 'showForm'])->name('cust
 Route::post('/customer/my-bike', [BikeController::class, 'update'])->name('customer.my_bike.update');
 Route::get('/customer/service-history', [CustomerServiceHistoryController::class, 'index'])->name('customer.service_history');
 Route::view('/customer/settings', 'customer.settings')->name('customer.settings');
+Route::get('/customer/update-info', [CustomerInfoController::class, 'showForm'])->name('customer.update_info');
+Route::post('/customer/update-info', [CustomerInfoController::class, 'update'])->name('customer.update_info.submit');
 
 // Mechanic Routes
 Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
@@ -84,4 +87,7 @@ Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'sto
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
 Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
 Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
-Route::get('/mechanic/upcomi
+Route::get('/mechanic/upcoming-appointments', [UpcomingAppointmentsController::class, 'index'])->name('mechanic.upcoming_appointments');
+
+// Shared Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
