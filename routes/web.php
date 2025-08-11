@@ -6,10 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
-use App\Http\Controllers\Admin\UpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
-use App\Http\Controllers\Mechanic\UpcomingAppointmentsController;
+use App\Http\Controllers\Admin\UpcomingAppointmentsController as AdminUpcomingAppointmentsController;
 
 // Auth Controllers
 use App\Http\Controllers\Auth\LogoutController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\Customer\CustomerLoginController;
 use App\Http\Controllers\Customer\BikeController;
 use App\Http\Controllers\Customer\CustomerServiceHistoryController;
 use App\Http\Controllers\Customer\CustomerInfoController;
+use App\Http\Controllers\Customer\CustomerAppointmentController; // ← ADDED
 
 // Mechanic Controllers
 use App\Http\Controllers\Mechanic\MechanicLoginController;
@@ -32,6 +32,7 @@ use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
 use App\Http\Controllers\Mechanic\ServiceHistoryController;
 use App\Http\Controllers\Mechanic\MechanicTodoController;
 use App\Http\Controllers\Mechanic\MechanicInfoController;
+use App\Http\Controllers\Mechanic\UpcomingAppointmentsController as MechanicUpcomingAppointmentsController;
 
 // Landing Page
 Route::get('/', function () {
@@ -64,7 +65,7 @@ Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name
 Route::get('/admin/add-mechanic', [AddMechanicController::class, 'showForm'])->name('admin.add_mechanic.form');
 Route::post('/admin/add-mechanic', [AddMechanicController::class, 'store'])->name('admin.add_mechanic.store');
 Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])->name('admin.invoices');
-Route::get('/admin/appointments/upcoming', [UpcomingAppointmentsController::class, 'index'])->name('admin.appointments.upcoming');
+Route::get('/admin/appointments/upcoming', [AdminUpcomingAppointmentsController::class, 'index'])->name('admin.appointments.upcoming'); // ← fixed alias
 Route::get('/admin/schedule/create', [ScheduleController::class, 'showForm'])->name('admin.schedule.form');
 Route::post('/admin/schedule/create', [ScheduleController::class, 'store'])->name('admin.schedule.store');
 
@@ -81,6 +82,12 @@ Route::view('/customer/settings', 'customer.settings')->name('customer.settings'
 Route::get('/customer/update-info', [CustomerInfoController::class, 'showForm'])->name('customer.update_info');
 Route::post('/customer/update-info', [CustomerInfoController::class, 'update'])->name('customer.update_info.submit');
 
+// ✅ Customer Appointments (only what’s needed)
+Route::get('/customer/appointments', [CustomerAppointmentController::class, 'index'])
+    ->name('customer.appointments.index');
+Route::delete('/customer/appointments/{id}', [CustomerAppointmentController::class, 'destroy'])
+    ->name('customer.appointments.destroy');
+
 // Mechanic Routes
 Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
 Route::get('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
@@ -88,7 +95,7 @@ Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'sto
 Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
 Route::get('/mechanic/todo', [MechanicTodoController::class, 'index'])->name('mechanic.todo');
 Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
-Route::get('/mechanic/upcoming-appointments', [UpcomingAppointmentsController::class, 'index'])->name('mechanic.upcoming_appointments');
+Route::get('/mechanic/upcoming-appointments', [MechanicUpcomingAppointmentsController::class, 'index'])->name('mechanic.upcoming_appointments'); // ← fixed alias
 Route::get('/mechanic/update-info', [MechanicInfoController::class, 'showForm'])->name('mechanic.info');
 Route::post('/mechanic/update-info', [MechanicInfoController::class, 'update'])->name('mechanic.info.update');
 
