@@ -34,6 +34,7 @@ use App\Http\Controllers\Mechanic\ServiceHistoryController;
 use App\Http\Controllers\Mechanic\MechanicTodoController;
 use App\Http\Controllers\Mechanic\MechanicInfoController;
 use App\Http\Controllers\Mechanic\UpcomingAppointmentsController as MechanicUpcomingAppointmentsController;
+use App\Http\Controllers\Mechanic\TodayAppointmentsController;
 
 // Landing Page
 Route::get('/', function () {
@@ -71,7 +72,7 @@ Route::get('/admin/schedule/create', [ScheduleController::class, 'showForm'])->n
 Route::post('/admin/schedule/create', [ScheduleController::class, 'store'])->name('admin.schedule.store');
 Route::get('/admin/customers', [ViewCustomersController::class, 'index'])
     ->name('admin.customers.index');
-    
+
 // Customer Routes
 Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
 Route::get('/customer/book-appointment', [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
@@ -101,6 +102,8 @@ Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])-
 Route::get('/mechanic/upcoming-appointments', [MechanicUpcomingAppointmentsController::class, 'index'])->name('mechanic.upcoming_appointments'); // ← fixed alias
 Route::get('/mechanic/update-info', [MechanicInfoController::class, 'showForm'])->name('mechanic.info');
 Route::post('/mechanic/update-info', [MechanicInfoController::class, 'update'])->name('mechanic.info.update');
-
+Route::get('/mechanic/appointments/today', [TodayAppointmentsController::class, 'index'])
+    ->name('mechanic.appointments.today');
+    
 // Shared Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
