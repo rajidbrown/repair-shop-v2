@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController as AdminUpcomingAppointmentsController;
+use App\Http\Controllers\Admin\ViewCustomersController;
 
 // Auth Controllers
 use App\Http\Controllers\Auth\LogoutController;
@@ -68,7 +69,9 @@ Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])->name('a
 Route::get('/admin/appointments/upcoming', [AdminUpcomingAppointmentsController::class, 'index'])->name('admin.appointments.upcoming'); // ← fixed alias
 Route::get('/admin/schedule/create', [ScheduleController::class, 'showForm'])->name('admin.schedule.form');
 Route::post('/admin/schedule/create', [ScheduleController::class, 'store'])->name('admin.schedule.store');
-
+Route::get('/admin/customers', [ViewCustomersController::class, 'index'])
+    ->name('admin.customers.index');
+    
 // Customer Routes
 Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
 Route::get('/customer/book-appointment', [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
