@@ -1,26 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Mechanic Dashboard</title>
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', 'Mechanic') • Shaded Motorworks</title>
+    @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
-<body class="bg-[#0e0e0e] text-white">
-    <header class="bg-[#1a1a1a] border-b-4 border-orange-600 p-4 flex justify-between items-center">
-        <h1 class="text-yellow-400 font-bebas text-2xl">MECHANIC DASHBOARD</h1>
-        <nav class="space-x-4">
-            <a href="{{ route('mechanic.dashboard') }}" class="text-yellow-400 hover:text-orange-500">Dashboard</a>
-            <a href="{{ route('mechanic.logout') }}" class="text-yellow-400 hover:text-orange-500">Logout</a>
-        </nav>
-    </header>
+<body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+<header class="brand-header">
+    <h1 class="brand-title">MECHANIC DASHBOARD</h1>
+    <nav class="space-x-4">
+        <a class="nav-link" href="{{ route('mechanic.dashboard') }}">Dashboard</a>
+        <a class="nav-link" href="{{ route('login.mechanic') }}">Logout</a>
+    </nav>
+</header>
 
-    <main>
-        @yield('content')
-    </main>
+<main class="page">
+    @yield('content')
+</main>
 
-    <footer class="bg-[#1a1a1a] border-t-4 border-orange-600 p-4 text-center text-gray-400">
-        &copy; {{ date('Y') }} Shaded Motorworks - Mechanic
-    </footer>
+<footer class="surface border-t-4 brand-border px-6 py-5 text-center muted">
+    &copy; {{ date('Y') }} Shaded Motorworks — Mechanic
+</footer>
 </body>
 </html>

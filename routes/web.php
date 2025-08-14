@@ -2,6 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
+// TEMP DEBUG: comment out your normal home route
+// Route::view('/', 'welcome')->name('home');
+
+Route::get('/', function () {
+    return 'ROUTE OK from Projects/web.php';
+});
+
+
+// Home Route
+Route::view('/', 'welcome')->name('home');
+
 // Admin Controllers
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -36,9 +47,6 @@ use App\Http\Controllers\Mechanic\MechanicInfoController;
 use App\Http\Controllers\Mechanic\UpcomingAppointmentsController as MechanicUpcomingAppointmentsController;
 use App\Http\Controllers\Mechanic\TodayAppointmentsController;
 use App\Http\Controllers\Mechanic\MechanicCustomersController;
-
-// Landing Page
-Route::get('/', fn () => view('welcome'))->name('home');
 
 // Static Pages
 Route::view('/about', 'about')->name('about');
@@ -129,9 +137,3 @@ Route::get('/mechanic/appointments/today', [TodayAppointmentsController::class, 
     ->name('mechanic.appointments.today');
 
 Route::get('/mechanic/customers', [MechanicCustomersController::class, 'index'])
-    ->name('mechanic.customers');
-
-// ---------------------
-// Shared Logout
-// ---------------------
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
