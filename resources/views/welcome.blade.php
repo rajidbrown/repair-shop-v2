@@ -7,7 +7,7 @@
     {{-- Hero --}}
     <div class="card mb-8">
       <div class="card-header">
-        <h1 class="heading-brand">Serviceee wowwwww That Knows The Road!</h1>
+        <h1 class="heading-brand">Service That Knows The Road!</h1>
       </div>
       <p class="muted">
         From diagnostics to full rebuilds — log in to manage your bike, book services, and get back on the road.
