@@ -137,3 +137,9 @@ Route::get('/mechanic/appointments/today', [TodayAppointmentsController::class, 
     ->name('mechanic.appointments.today');
 
 Route::get('/mechanic/customers', [MechanicCustomersController::class, 'index'])
+    ->name('mechanic.customers');
+
+// ---------------------
+// Shared Logout
+// ---------------------
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
