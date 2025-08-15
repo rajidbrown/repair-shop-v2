@@ -33,8 +33,8 @@ class AdminDashboardController extends Controller
         }
 
         return view('admin.dashboard', [
-            'mechanics' => $mechanics,
-            'scheduleGrid' => $scheduleGrid
+        'mechanics' => $mechanics,
+        'schedule_grid' => $scheduleGrid, // rename here
         ]);
     }
 }

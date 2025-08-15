@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// TEMP DEBUG: comment out your normal home route
-// Route::view('/', 'welcome')->name('home');
-
 Route::get('/', function () {
     return 'ROUTE OK from Projects/web.php';
 });
@@ -17,8 +14,8 @@ Route::view('/', 'welcome')->name('home');
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
-use App\Http\Controllers\Admin\ScheduleController;
-use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Admin\CreateScheduleController;
+use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController as AdminUpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ViewCustomersController;
 
@@ -73,7 +70,8 @@ Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin
 // Admin Routes
 // ---------------------
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-
+// Admin Settings (simple view for now)
+Route::view('/admin/settings', 'admin.settings')->name('admin.settings');
 Route::get('/admin/add-mechanic',  [AddMechanicController::class, 'showForm'])->name('admin.add_mechanic.form');
 Route::post('/admin/add-mechanic', [AddMechanicController::class, 'store'])->name('admin.add_mechanic.store');
 
@@ -82,8 +80,11 @@ Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])->name('a
 Route::get('/admin/appointments/upcoming', [AdminUpcomingAppointmentsController::class, 'index'])
     ->name('admin.appointments.upcoming');
 
-Route::get('/admin/schedule/create',  [ScheduleController::class, 'showForm'])->name('admin.schedule.form');
-Route::post('/admin/schedule/create', [ScheduleController::class, 'store'])->name('admin.schedule.store');
+Route::get('/admin/schedule/create',  [CreateScheduleController::class, 'showForm'])
+    ->name('admin.schedule.create');
+
+Route::post('/admin/schedule/create', [CreateScheduleController::class, 'store'])
+    ->name('admin.schedule.store');
 
 Route::get('/admin/customers', [ViewCustomersController::class, 'index'])->name('admin.customers');
 
