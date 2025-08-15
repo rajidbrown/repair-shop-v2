@@ -10,10 +10,12 @@
 <header class="brand-header flex justify-between items-center">
     <div class="flex items-center space-x-4">
         <!-- Back Button -->
-       <button onclick="window.history.back()" class="btn-back">← Back</button>
+        <button onclick="window.history.back()" class="btn-back">← Back</button>
 
-        <!-- Brand Title -->
-        <h1 class="brand-title">MECHANIC DASHBOARD</h1>
+        <!-- Brand Title as Home Link -->
+        <a href="{{ route('home') }}" class="brand-title">
+            SHADED MOTORWORKS
+        </a>
     </div>
 
     <!-- Navigation -->

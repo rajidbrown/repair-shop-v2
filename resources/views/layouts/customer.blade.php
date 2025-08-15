@@ -15,7 +15,9 @@
         @endunless
         
         <!-- Brand Title -->
-        <h1 class="brand-title">SHADED MOTORWORKS</h1>
+        <a href="{{ route('home') }}" class="brand-title">
+            SHADED MOTORWORKS
+        </a>
     </div>
 
     <!-- Navigation -->

@@ -15,7 +15,9 @@
         <button onclick="window.history.back()" class="btn-back">← Back</button>
 
         <!-- Brand Title -->
-        <h1 class="brand-title">ADMIN PORTAL</h1>
+        <a href="{{ route('home') }}" class="brand-title">
+            SHADED MOTORWORKS
+        </a>
     </div>
 
     <!-- Navigation -->

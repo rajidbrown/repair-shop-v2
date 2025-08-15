@@ -97,6 +97,18 @@
   @apply bg-red-600 text-black px-3 py-1 rounded hover:bg-red-500 transition;
 }
 
+.brand-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.4em;
+    color: var(--color-accent, #ffcc00);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.brand-title:hover {
+    color: var(--color-accent-hover, #f4511e);
+}
+
   /* Card / Panel */
   .card {
     background: var(--color-elevated);
