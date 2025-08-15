@@ -3,22 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Customer') • Shaded Motorworks</title>
+    <title>@yield('title', 'Welcome') • Shaded Motorworks</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
 <header class="brand-header flex justify-between items-center">
-    <div class="flex items-center space-x-4">
-        <!-- Back Button (hidden on welcome page) -->
-        @unless(Route::currentRouteName() === 'welcome')
-            <button onclick="window.history.back()" class="btn-back">← Back</button>
-        @endunless
-        
-        <!-- Brand Title -->
-        <h1 class="brand-title">SHADED MOTORWORKS</h1>
-    </div>
-
-    <!-- Navigation -->
+    <h1 class="brand-title">SHADED MOTORWORKS</h1>
     <nav class="space-x-4">
         <a class="nav-link" href="{{ route('login.customer') }}">Customer Login</a>
         <a class="nav-link" href="{{ route('login.mechanic') }}">Mechanic Login</a>

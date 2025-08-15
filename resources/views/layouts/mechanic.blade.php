@@ -7,8 +7,16 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-<header class="brand-header">
-    <h1 class="brand-title">MECHANIC DASHBOARD</h1>
+<header class="brand-header flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+        <!-- Back Button -->
+       <button onclick="window.history.back()" class="btn-back">← Back</button>
+
+        <!-- Brand Title -->
+        <h1 class="brand-title">MECHANIC DASHBOARD</h1>
+    </div>
+
+    <!-- Navigation -->
     <nav class="space-x-4">
         <a class="nav-link" href="{{ route('mechanic.dashboard') }}">Dashboard</a>
         <a class="nav-link" href="{{ route('login.mechanic') }}">Logout</a>

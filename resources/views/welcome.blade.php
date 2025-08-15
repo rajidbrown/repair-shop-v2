@@ -1,5 +1,5 @@
 {{-- resources/views/welcome.blade.php --}}
-@extends('layouts.customer')
+@extends('layouts.welcome_layout')
 @section('title', 'Home')
 
 @section('content')
@@ -12,7 +12,7 @@
       <p class="muted">
         From diagnostics to full rebuilds — log in to manage your bike, book services, and get back on the road.
       </p>
-      <div class="mt-4">
+      <div class="mt-4 flex justify-center">
         <a href="{{ route('login.customer') }}" class="btn btn-primary">Book Your Appointment</a>
       </div>
     </div>
@@ -23,8 +23,8 @@
         <div class="card h-full">
           <h3 class="heading-brand mb-2">About Us</h3>
           <p class="muted">
-            Shaded Motorworks is a Georgia‑based motorcycle shop offering diagnostics, maintenance, and rebuilds.
-            We’re rider‑owned and operated with a passion for the road.
+            Shaded Motorworks is a Georgia-based motorcycle shop offering diagnostics, maintenance, and rebuilds.
+            We’re rider-owned and operated with a passion for the road.
           </p>
         </div>
       </a>
