@@ -6,11 +6,16 @@
   {{-- Quick actions --}}
   <section class="mb-10">
     <h2 class="heading-brand mb-4">Admin Quick Access</h2>
+
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <a class="card text-center" href="{{ route('admin.customers') }}">View Customers</a>
-        <a class="card text-center" href="{{ route('admin.appointments.upcoming') }}">Upcoming Appointments</a>
-        <a class="card text-center" href="{{ route('admin.invoices') }}">View Invoices</a>
-        <a class="card text-center" href="{{ route('admin.settings') }}">Settings</a>
+      <a class="card text-center" href="{{ route('admin.customers') }}">View Customers</a>
+      <a class="card text-center" href="{{ route('admin.appointments.upcoming') }}">Upcoming Appointments</a>
+      <a class="card text-center" href="{{ route('admin.invoices') }}">View Invoices</a>
+      <a class="card text-center" href="{{ route('admin.settings') }}">Settings</a>
+
+      {{-- Actions --}}
+      <a class="card text-center" href="{{ route('admin.add_mechanic.form') }}">Add Mechanic</a>
+      <a class="card text-center" href="{{ route('admin.schedule.create') }}">Create Schedule</a>
     </div>
   </section>
 
@@ -18,7 +23,7 @@
   <section class="mb-10">
     <h2 class="heading-brand mb-4">Registered Mechanics</h2>
 
-    @if($mechanics->isNotEmpty())
+    @if(isset($mechanics) && $mechanics->isNotEmpty())
       <div class="table-wrap">
         <table class="table">
           <thead>
@@ -42,7 +47,10 @@
         </table>
       </div>
     @else
-      <p class="muted">No mechanics registered yet.</p>
+      <p class="muted">
+        No mechanics registered yet.
+        <a href="{{ route('admin.add_mechanic.form') }}" class="underline">Add one now</a>.
+      </p>
     @endif
   </section>
 
@@ -50,7 +58,7 @@
   <section>
     <h2 class="heading-brand mb-4">Mechanic Weekly Schedule</h2>
 
-    @if(!empty($schedule_grid))
+    @if(isset($schedule_grid) && !empty($schedule_grid) && isset($mechanics) && $mechanics->isNotEmpty())
       <div class="table-wrap">
         <table class="table">
           <thead>
@@ -74,7 +82,10 @@
         </table>
       </div>
     @else
-      <p class="muted">No schedule data available.</p>
+      <p class="muted">
+        No schedule data available.
+        <a href="{{ route('admin.schedule.create') }}" class="underline">Create a schedule</a>.
+      </p>
     @endif
   </section>
 @endsection

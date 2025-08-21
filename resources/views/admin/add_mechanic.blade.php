@@ -1,144 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Mechanic - Shaded Motorworks</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #0e0e0e;
-            color: #eee;
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-        }
+{{-- resources/views/admin/add_mechanic.blade.php --}}
+@extends('layouts.admin')
+@section('title', 'Add Mechanic')
 
-        header {
-            background-color: #1a1a1a;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid #f4511e;
-        }
+@section('content')
+  <section class="page max-w-2xl mx-auto">
+    <h2 class="heading-brand mb-4">Add Mechanic</h2>
 
-        header h1 {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 2.4em;
-            color: #ffcc00;
-            text-transform: uppercase;
-        }
+    {{-- Flash messages --}}
+    @if (session('success'))
+      <div class="alert">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+      <div class="alert alert-error">{{ session('error') }}</div>
+    @endif
+    @if ($errors->any())
+      <div class="alert alert-error">
+        <ul class="list-disc pl-6">
+          @foreach ($errors->all() as $e)
+            <li>{{ $e }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
 
-        nav a {
-            color: #ffcc00;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: bold;
-        }
-
-        nav a:hover {
-            color: #f4511e;
-        }
-
-        form {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 40px auto;
-            border: 2px solid #f4511e;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            background-color: #2a2a2a;
-            color: #ddd;
-            border: 2px solid #444;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #f4511e;
-            color: #fff;
-            padding: 12px 20px;
-            margin-top: 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #d1391b;
-        }
-
-        .error, .success {
-            text-align: center;
-            font-weight: bold;
-            padding: 12px;
-            margin: 20px auto 0;
-            max-width: 600px;
-            border-radius: 5px;
-        }
-
-        .error {
-            background-color: #2a2a2a;
-            border: 2px solid #e74c3c;
-            color: #e74c3c;
-        }
-
-        .success {
-            background-color: #2a2a2a;
-            border: 2px solid #2ecc71;
-            color: #2ecc71;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>SHADED MOTORWORKS</h1>
-        <nav>
-            <a href="{{ url('/admin/dashboard') }}">Dashboard</a>
-            <a href="{{ url('/logout') }}">Logout</a>
-        </nav>
-    </header>
-
-    {!! $message !!}
-
-    <form method="POST" action="{{ route('admin.add_mechanic.submit') }}">
+    <div class="card">
+      <form method="POST" action="{{ route('admin.add_mechanic.store') }}" class="space-y-4">
         @csrf
 
-        <label for="firstName">First Name:</label>
-        <input type="text" name="firstName" required>
+        <div>
+          <label class="label" for="firstName">First Name</label>
+          <input class="input" id="firstName" name="firstName" type="text" value="{{ old('firstName') }}" required>
+        </div>
 
-        <label for="lastName">Last Name:</label>
-        <input type="text" name="lastName" required>
+        <div>
+          <label class="label" for="lastName">Last Name</label>
+          <input class="input" id="lastName" name="lastName" type="text" value="{{ old('lastName') }}" required>
+        </div>
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" required>
+        <div>
+          <label class="label" for="email">Email</label>
+          <input class="input" id="email" name="email" type="email" value="{{ old('email') }}" required>
+        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
+        <div>
+          <label class="label" for="password">Password</label>
+          <input class="input" id="password" name="password" type="password" required>
+        </div>
 
-        <label for="specialty">Specialty:</label>
-        <input type="text" name="specialty">
+        <div>
+          <label class="label" for="specialty">Specialty</label>
+          <input class="input" id="specialty" name="specialty" type="text" value="{{ old('specialty') }}">
+        </div>
 
-        <label for="phoneNumber">Phone Number:</label>
-        <input type="text" name="phoneNumber">
+        <div>
+          <label class="label" for="phoneNumber">Phone Number</label>
+          <input class="input" id="phoneNumber" name="phoneNumber" type="text" value="{{ old('phoneNumber') }}">
+        </div>
 
-        <input type="submit" value="Add Mechanic">
-    </form>
-</body>
-</html>
+        <div class="pt-2">
+          <button type="submit" class="btn btn-primary">Add Mechanic</button>
+        </div>
+      </form>
+    </div>
+  </section>
+@endsection

@@ -15,6 +15,6 @@ class InvoiceController extends Controller
             ->orderByDesc('i.DateIssued')
             ->get();
 
-        return view('admin.invoices.index', compact('invoices'));
+        return view('admin.invoices', compact('invoices'));
     }
 }

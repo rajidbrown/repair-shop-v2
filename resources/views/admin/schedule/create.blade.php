@@ -1,166 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Weekly Schedule - Shaded Motorworks</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #0e0e0e;
-            color: #ddd;
-            margin: 0;
-            padding: 0;
-        }
+{{-- resources/views/admin/schedule/create.blade.php --}}
+@extends('layouts.admin')
+@section('title', 'Create Schedule')
 
-        header {
-            background-color: #1a1a1a;
-            color: #ffcc00;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid #f4511e;
-        }
+@section('content')
+  <section class="card max-w-2xl mx-auto">
+    <h2 class="heading-brand mb-4">Create Weekly Schedule</h2>
 
-        header h1 {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 2.2em;
-            margin: 0;
-        }
+    {{-- flash messages --}}
+    @if(session('success'))
+      <div class="alert mb-4">{{ session('success') }}</div>
+    @elseif(session('error'))
+      <div class="alert alert-error mb-4">{{ session('error') }}</div>
+    @endif
 
-        nav a {
-            color: #ffcc00;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 20px;
-        }
+    {{-- validation errors --}}
+    @if ($errors->any())
+      <div class="alert alert-error mb-4">
+        <div><strong>There were some problems with your input:</strong></div>
+        <ul class="list-disc pl-6 mt-2">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
 
-        nav a:hover {
-            color: #f4511e;
-        }
+    <form action="{{ route('admin.schedule.store') }}" method="POST" class="space-y-4">
+      @csrf
 
-        main {
-            padding: 50px 20px;
-            text-align: center;
-        }
+      <div>
+        <label for="mechanicID" class="label">Mechanic</label>
+        <select id="mechanicID" name="mechanicID" class="select" required>
+          <option value="">Select a Mechanic</option>
+          @foreach($mechanics as $mechanic)
+            <option value="{{ $mechanic->MechanicID }}">
+              {{ $mechanic->FirstName }} {{ $mechanic->LastName }}
+            </option>
+          @endforeach
+        </select>
+      </div>
 
-        section {
-            background-color: #1f1f1f;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 30px 40px;
-            border-radius: 12px;
-            border: 2px solid #f4511e;
-        }
+      <div>
+        <label for="dayOfWeek" class="label">Day of the Week</label>
+        <select id="dayOfWeek" name="dayOfWeek" class="select" required>
+          <option value="">Select a day</option>
+          @foreach(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] as $day)
+            <option value="{{ $day }}">{{ $day }}</option>
+          @endforeach
+        </select>
+      </div>
 
-        h2 {
-            font-family: 'Bebas Neue', cursive;
-            font-size: 2.2em;
-            color: #ffcc00;
-            margin-bottom: 30px;
-        }
+      <div>
+        <label for="startTime" class="label">Start Time</label>
+        <input type="time" id="startTime" name="startTime" class="input" required>
+      </div>
 
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+      <div>
+        <label for="endTime" class="label">End Time</label>
+        <input type="time" id="endTime" name="endTime" class="input" required>
+      </div>
 
-        select, input[type="time"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #555;
-            background-color: #2a2a2a;
-            color: #ddd;
-        }
-
-        button {
-            padding: 12px 20px;
-            background-color: #f4511e;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #d1391b;
-        }
-
-        .error { color: #ff4d4d; font-weight: bold; margin-bottom: 15px; }
-        .success { color: #00ff99; font-weight: bold; margin-bottom: 15px; }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #1a1a1a;
-            color: #aaa;
-            border-top: 4px solid #f4511e;
-            margin-top: 60px;
-            font-size: 0.95em;
-        }
-    </style>
-</head>
-<body>
-<header>
-    <h1>SHADED MOTORWORKS</h1>
-    <nav>
-        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-        <a href="{{ route('admin.schedule.form') }}">Create Schedule</a>
-        <a href="{{ route('admin.add_mechanic.form') }}">Add Mechanic</a>
-        <a href="#">Logout</a>
-    </nav>
-</header>
-
-<main>
-    <section>
-        <h2>Create Weekly Schedule</h2>
-
-        @if(session('success'))
-            <p class="success">{{ session('success') }}</p>
-        @elseif(session('error'))
-            <p class="error">{{ session('error') }}</p>
-        @endif
-
-        <form action="{{ route('admin.schedule.store') }}" method="POST">
-            @csrf
-            <label for="mechanicID">Mechanic:</label>
-            <select id="mechanicID" name="mechanicID" required>
-                <option value="">Select a Mechanic</option>
-                @foreach($mechanics as $mechanic)
-                    <option value="{{ $mechanic->MechanicID }}">
-                        {{ $mechanic->FirstName }} {{ $mechanic->LastName }}
-                    </option>
-                @endforeach
-            </select>
-
-            <label for="dayOfWeek">Day of the Week:</label>
-            <select id="dayOfWeek" name="dayOfWeek" required>
-                <option value="">Select a day</option>
-                @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
-                    <option value="{{ $day }}">{{ $day }}</option>
-                @endforeach
-            </select>
-
-            <label for="startTime">Start Time:</label>
-            <input type="time" id="startTime" name="startTime" required>
-
-            <label for="endTime">End Time:</label>
-            <input type="time" id="endTime" name="endTime" required>
-
-            <button type="submit">Add to Schedule</button>
-        </form>
-    </section>
-</main>
-
-<footer>
-    <p>&copy; 2025 Shaded Motorworks — Built for speed & precision.</p>
-</footer>
-</body>
-</html>
+      <button type="submit" class="btn btn-primary w-full">Add to Schedule</button>
+    </form>
+  </section>
+@endsection
