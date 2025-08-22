@@ -32,6 +32,7 @@
               <th>Email</th>
               <th>Specialty</th>
               <th>Phone</th>
+              <th class="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +41,10 @@
               <td>{{ $m->FirstName }} {{ $m->LastName }}</td>
               <td>{{ $m->Email ?? '-' }}</td>
               <td>{{ $m->Specialty ?? '-' }}</td>
-              <td>{{ $m->Phone ?? '-' }}</td>
+              <td>{{ $m->PhoneNumber ?? '-' }}</td>
+              <td class="text-right">
+                <a class="btn btn-sm" href="{{ route('admin.mechanics.edit', $m->MechanicID) }}">Edit</a>
+              </td>
             </tr>
           @endforeach
           </tbody>

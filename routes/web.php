@@ -2,28 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return 'ROUTE OK from Projects/web.php';
-});
+// ---------------------
+// Controllers
+// ---------------------
 
-
-// Home Route
-Route::view('/', 'welcome')->name('home');
-
-// Admin Controllers
+// Admin
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Admin\CreateScheduleController;
-use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController as AdminUpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ViewCustomersController;
 
-// Auth Controllers
+// Auth
+use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 
-// Customer Controllers
+// Customer
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\DiagnosticsController;
@@ -34,7 +30,7 @@ use App\Http\Controllers\Customer\CustomerServiceHistoryController;
 use App\Http\Controllers\Customer\CustomerInfoController;
 use App\Http\Controllers\Customer\CustomerAppointmentController;
 
-// Mechanic Controllers
+// Mechanic
 use App\Http\Controllers\Mechanic\MechanicLoginController;
 use App\Http\Controllers\Mechanic\MechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
@@ -45,12 +41,22 @@ use App\Http\Controllers\Mechanic\UpcomingAppointmentsController as MechanicUpco
 use App\Http\Controllers\Mechanic\TodayAppointmentsController;
 use App\Http\Controllers\Mechanic\MechanicCustomersController;
 
-// Static Pages
+// ---------------------
+// Public / Static
+// ---------------------
+
+// Home
+Route::view('/', 'welcome')->name('home');
+
+// Static pages
 Route::view('/about', 'about')->name('about');
 Route::view('/faq', 'faq')->name('faq');
 Route::view('/offerings', 'offerings')->name('offerings');
 
+// ---------------------
 // Auth Routes
+// ---------------------
+
 Route::view('/register', 'auth.register')->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
@@ -66,6 +72,9 @@ Route::post('/login/mechanic', [MechanicLoginController::class, 'login'])->name(
 Route::view('/login/admin', 'auth.login_admin')->name('login.admin');
 Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
+// Shared Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
 // ---------------------
 // Admin Routes
 // ---------------------
@@ -74,15 +83,21 @@ Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
 
-// Admin Settings (simple view for now)
+// Settings (simple view for now)
 Route::view('/admin/settings', 'admin.settings')
     ->name('admin.settings');
 
 // Add Mechanic
 Route::get('/admin/add-mechanic',  [AddMechanicController::class, 'showForm'])
     ->name('admin.add_mechanic.form');
-Route::post('/admin/add-mechanic', [AddMechanicController::class, 'submitForm'])
+Route::post('/admin/add-mechanic', [AddMechanicController::class, 'store'])
     ->name('admin.add_mechanic.store');
+
+// Edit/Update Mechanic
+Route::get('/admin/mechanics/{id}/edit', [AddMechanicController::class, 'edit'])
+    ->name('admin.mechanics.edit');
+Route::put('/admin/mechanics/{id}', [AddMechanicController::class, 'update'])
+    ->name('admin.mechanics.update');
 
 // Invoices
 Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])
@@ -105,23 +120,36 @@ Route::get('/admin/customers', [ViewCustomersController::class, 'index'])
 // ---------------------
 // Customer Routes
 // ---------------------
-Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
 
-Route::get('/customer/book-appointment',  [BookAppointmentController::class, 'showForm'])->name('customer.book_appointment.form');
-Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])->name('customer.book_appointment.store');
+Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
+    ->name('customer.dashboard');
 
-Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])->name('customer.invoices');
-Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])->name('customer.diagnostics');
+Route::get('/customer/book-appointment',  [BookAppointmentController::class, 'showForm'])
+    ->name('customer.book_appointment.form');
+Route::post('/customer/book-appointment', [BookAppointmentController::class, 'store'])
+    ->name('customer.book_appointment.store');
 
-Route::get('/customer/my-bike',  [BikeController::class, 'showForm'])->name('customer.my_bike');
-Route::post('/customer/my-bike', [BikeController::class, 'update'])->name('customer.my_bike.update');
+Route::get('/customer/invoices', [CustomerInvoiceController::class, 'index'])
+    ->name('customer.invoices');
 
-Route::get('/customer/service-history', [CustomerServiceHistoryController::class, 'index'])->name('customer.service_history');
+Route::get('/customer/diagnostics', [DiagnosticsController::class, 'index'])
+    ->name('customer.diagnostics');
 
-Route::view('/customer/settings', 'customer.settings')->name('customer.settings');
+Route::get('/customer/my-bike',  [BikeController::class, 'showForm'])
+    ->name('customer.my_bike');
+Route::post('/customer/my-bike', [BikeController::class, 'update'])
+    ->name('customer.my_bike.update');
 
-Route::get('/customer/update-info',  [CustomerInfoController::class, 'showForm'])->name('customer.update_info');
-Route::post('/customer/update-info', [CustomerInfoController::class, 'update'])->name('customer.update_info.submit');
+Route::get('/customer/service-history', [CustomerServiceHistoryController::class, 'index'])
+    ->name('customer.service_history');
+
+Route::view('/customer/settings', 'customer.settings')
+    ->name('customer.settings');
+
+Route::get('/customer/update-info',  [CustomerInfoController::class, 'showForm'])
+    ->name('customer.update_info');
+Route::post('/customer/update-info', [CustomerInfoController::class, 'update'])
+    ->name('customer.update_info.submit');
 
 // Customer Appointments
 Route::get('/customer/appointments', [CustomerAppointmentController::class, 'index'])
@@ -132,29 +160,33 @@ Route::delete('/customer/appointments/{id}', [CustomerAppointmentController::cla
 // ---------------------
 // Mechanic Routes
 // ---------------------
-Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])->name('mechanic.dashboard');
 
-Route::get('/mechanic/diagnostics',  [MechanicDiagnosticsController::class, 'index'])->name('mechanic.diagnostics');
-Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('mechanic.diagnostics.submit');
+Route::get('/mechanic/dashboard', [MechanicDashboardController::class, 'index'])
+    ->name('mechanic.dashboard');
 
-Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])->name('mechanic.service_history');
+Route::get('/mechanic/diagnostics',  [MechanicDiagnosticsController::class, 'index'])
+    ->name('mechanic.diagnostics');
+Route::post('/mechanic/diagnostics', [MechanicDiagnosticsController::class, 'store'])
+    ->name('mechanic.diagnostics.submit');
 
-Route::get('/mechanic/todo',         [MechanicTodoController::class, 'index'])->name('mechanic.todo');
-Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])->name('mechanic.todo.update');
+Route::get('/mechanic/service-history', [ServiceHistoryController::class, 'index'])
+    ->name('mechanic.service_history');
+
+Route::get('/mechanic/todo',         [MechanicTodoController::class, 'index'])
+    ->name('mechanic.todo');
+Route::post('/mechanic/todo/update', [MechanicTodoController::class, 'update'])
+    ->name('mechanic.todo.update');
 
 Route::get('/mechanic/upcoming-appointments', [MechanicUpcomingAppointmentsController::class, 'index'])
     ->name('mechanic.upcoming_appointments');
 
-Route::get('/mechanic/update-info',  [MechanicInfoController::class, 'showForm'])->name('mechanic.info');
-Route::post('/mechanic/update-info', [MechanicInfoController::class, 'update'])->name('mechanic.info.update');
+Route::get('/mechanic/update-info',  [MechanicInfoController::class, 'showForm'])
+    ->name('mechanic.info');
+Route::post('/mechanic/update-info', [MechanicInfoController::class, 'update'])
+    ->name('mechanic.info.update');
 
 Route::get('/mechanic/appointments/today', [TodayAppointmentsController::class, 'index'])
     ->name('mechanic.appointments.today');
 
 Route::get('/mechanic/customers', [MechanicCustomersController::class, 'index'])
     ->name('mechanic.customers');
-
-// ---------------------
-// Shared Logout
-// ---------------------
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
