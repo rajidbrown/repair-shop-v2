@@ -69,24 +69,38 @@ Route::post('/login/admin', [AdminLoginController::class, 'login'])->name('admin
 // ---------------------
 // Admin Routes
 // ---------------------
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+// Dashboard
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
+    ->name('admin.dashboard');
+
 // Admin Settings (simple view for now)
-Route::view('/admin/settings', 'admin.settings')->name('admin.settings');
-Route::get('/admin/add-mechanic',  [AddMechanicController::class, 'showForm'])->name('admin.add_mechanic.form');
-Route::post('/admin/add-mechanic', [AddMechanicController::class, 'store'])->name('admin.add_mechanic.store');
+Route::view('/admin/settings', 'admin.settings')
+    ->name('admin.settings');
 
-Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])->name('admin.invoices');
+// Add Mechanic
+Route::get('/admin/add-mechanic',  [AddMechanicController::class, 'showForm'])
+    ->name('admin.add_mechanic.form');
+Route::post('/admin/add-mechanic', [AddMechanicController::class, 'submitForm'])
+    ->name('admin.add_mechanic.store');
 
+// Invoices
+Route::get('/admin/invoices', [AdminInvoiceController::class, 'index'])
+    ->name('admin.invoices');
+
+// Appointments
 Route::get('/admin/appointments/upcoming', [AdminUpcomingAppointmentsController::class, 'index'])
     ->name('admin.appointments.upcoming');
 
+// Schedules
 Route::get('/admin/schedule/create',  [CreateScheduleController::class, 'showForm'])
     ->name('admin.schedule.create');
-
 Route::post('/admin/schedule/create', [CreateScheduleController::class, 'store'])
     ->name('admin.schedule.store');
 
-Route::get('/admin/customers', [ViewCustomersController::class, 'index'])->name('admin.customers');
+// Customers
+Route::get('/admin/customers', [ViewCustomersController::class, 'index'])
+    ->name('admin.customers');
 
 // ---------------------
 // Customer Routes
