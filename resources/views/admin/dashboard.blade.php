@@ -58,38 +58,44 @@
     @endif
   </section>
 
-  {{-- Weekly Schedule --}}
-  <section>
-    <h2 class="heading-brand mb-4">Mechanic Weekly Schedule</h2>
+{{-- Weekly Schedule --}}
+<section>
+  <h2 class="heading-brand mb-4">Mechanic Weekly Schedule</h2>
 
-    @if(isset($schedule_grid) && !empty($schedule_grid) && isset($mechanics) && $mechanics->isNotEmpty())
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
+  {{-- Per-mechanic schedule edit buttons --}}
+  <div class="mb-4 flex flex-wrap gap-2">
+    @foreach ($mechanics as $m)
+      <a class="btn btn-sm" href="{{ route('admin.mechanics.schedule.edit', $m->MechanicID) }}">
+        Edit {{ $m->FirstName }} {{ $m->LastName }}'s Schedule
+      </a>
+    @endforeach
+  </div>
+
+  @if(isset($schedule_grid) && !empty($schedule_grid) && isset($mechanics) && $mechanics->isNotEmpty())
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            @foreach ($mechanics as $m)
+              <th>{{ $m->FirstName }} {{ $m->LastName }}</th>
+            @endforeach
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($schedule_grid as $day => $row)
             <tr>
-              <th>Day</th>
+              <td>{{ $day }}</td>
               @foreach ($mechanics as $m)
-                <th>{{ $m->FirstName }} {{ $m->LastName }}</th>
+                <td>{{ $row[$m->MechanicID] ?? '' }}</td>
               @endforeach
             </tr>
-          </thead>
-          <tbody>
-            @foreach ($schedule_grid as $day => $row)
-              <tr>
-                <td>{{ $day }}</td>
-                @foreach ($mechanics as $m)
-                  <td>{{ $row[$m->MechanicID] ?? '' }}</td>
-                @endforeach
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
-    @else
-      <p class="muted">
-        No schedule data available.
-        <a href="{{ route('admin.schedule.create') }}" class="underline">Create a schedule</a>.
-      </p>
-    @endif
-  </section>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  @else
+    <p class="muted">No schedule data available.</p>
+  @endif
+</section>
 @endsection

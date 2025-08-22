@@ -9,6 +9,9 @@ use Illuminate\Validation\Rule;
 
 class CreateScheduleController extends Controller
 {
+    /**
+     * Show the "Create Weekly Schedule" form.
+     */
     public function showForm()
     {
         $mechanics = DB::table('Mechanics')
@@ -20,30 +23,46 @@ class CreateScheduleController extends Controller
         return view('admin.schedule.create', compact('mechanics'));
     }
 
+    /**
+     * Store a new shift for a mechanic.
+     * This *does not* overwrite overlaps—overrides are done in the
+     * dedicated Edit Schedule UI.
+     */
     public function store(Request $request)
     {
-        // 1) Validate inputs
+        // 1) Validate basic shape
         $request->validate([
-            'mechanicID' => ['required','integer', Rule::exists('Mechanics', 'MechanicID')],
-            'dayOfWeek'  => ['required','string', Rule::in(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'])],
-            // from your Blade we post values like "07:30" — validate HH:MM 24h
-            'startTime'  => ['required','date_format:H:i'],
-            'endTime'    => ['required','date_format:H:i'],
+            'mechanicID' => ['required', 'integer', Rule::exists('Mechanics', 'MechanicID')],
+            'dayOfWeek'  => ['required', 'string', Rule::in(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'])],
+            // values come in like "09:00", "17:30" from the select
+            'startTime'  => ['required', 'date_format:H:i'],
+            'endTime'    => ['required', 'date_format:H:i'],
         ]);
 
+        // Normalize inputs
         $mechanicID = (int) $request->mechanicID;
         $day        = $request->dayOfWeek;
         $start      = $request->startTime; // "HH:MM"
         $end        = $request->endTime;   // "HH:MM"
 
-        // 2) Business rule: end > start
+        // 2) Enforce end > start
         if ($end <= $start) {
             return back()
                 ->withInput()
                 ->with('error', 'End time must be after start time.');
         }
 
-        // 3) Prevent overlapping shifts for the same mechanic/day
+        // 3) Enforce 30-minute increments (to match the UI options)
+        foreach ([$start, $end] as $t) {
+            [$h, $m] = array_map('intval', explode(':', $t));
+            if (!in_array($m, [0, 30], true)) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Times must be on 30-minute increments.');
+            }
+        }
+
+        // 4) Prevent overlap for the same mechanic/day
         // overlap when (existing.Start < newEnd) AND (existing.End > newStart)
         $hasOverlap = DB::table('Schedule')
             ->where('MechanicID', $mechanicID)
@@ -57,18 +76,19 @@ class CreateScheduleController extends Controller
         if ($hasOverlap) {
             return back()
                 ->withInput()
-                ->with('error', 'This time range overlaps an existing schedule for that mechanic.');
+                ->with('error', 'That time range overlaps an existing shift for this mechanic. Use the Edit Schedule page to override.');
         }
 
-        // 4) Insert
+        // 5) Insert (only existing columns)
         $ok = DB::table('Schedule')->insert([
             'MechanicID' => $mechanicID,
             'DayOfWeek'  => $day,
-            'StartTime'  => $start,  // stored as "HH:MM"
+            'StartTime'  => $start, // stored as "HH:MM"
             'EndTime'    => $end,
         ]);
 
-        return back()->with($ok ? 'success' : 'error',
+        return back()->with(
+            $ok ? 'success' : 'error',
             $ok ? '✅ Schedule added successfully!' : '❌ Failed to add schedule.'
         );
     }
