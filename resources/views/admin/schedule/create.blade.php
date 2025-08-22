@@ -25,6 +25,18 @@
       </div>
     @endif
 
+    @php
+      // Build 30-minute options, 07:00–19:00
+      $timeOptions = [];
+      for ($h = 7; $h <= 19; $h++) {
+        foreach ([0, 30] as $m) {
+          $value = sprintf('%02d:%02d', $h, $m);               // 24h value
+          $label = date('g:i A', strtotime($value));           // 12h label
+          $timeOptions[$value] = $label;
+        }
+      }
+    @endphp
+
     <form action="{{ route('admin.schedule.store') }}" method="POST" class="space-y-4">
       @csrf
 
@@ -33,7 +45,7 @@
         <select id="mechanicID" name="mechanicID" class="select" required>
           <option value="">Select a Mechanic</option>
           @foreach($mechanics as $mechanic)
-            <option value="{{ $mechanic->MechanicID }}">
+            <option value="{{ $mechanic->MechanicID }}" @selected(old('mechanicID') == $mechanic->MechanicID)>
               {{ $mechanic->FirstName }} {{ $mechanic->LastName }}
             </option>
           @endforeach
@@ -45,19 +57,29 @@
         <select id="dayOfWeek" name="dayOfWeek" class="select" required>
           <option value="">Select a day</option>
           @foreach(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] as $day)
-            <option value="{{ $day }}">{{ $day }}</option>
+            <option value="{{ $day }}" @selected(old('dayOfWeek') == $day)>{{ $day }}</option>
           @endforeach
         </select>
       </div>
 
       <div>
         <label for="startTime" class="label">Start Time</label>
-        <input type="time" id="startTime" name="startTime" class="input" required>
+        <select id="startTime" name="startTime" class="select" required>
+          <option value="">Select start</option>
+          @foreach($timeOptions as $val => $label)
+            <option value="{{ $val }}" @selected(old('startTime') == $val)>{{ $label }}</option>
+          @endforeach
+        </select>
       </div>
 
       <div>
         <label for="endTime" class="label">End Time</label>
-        <input type="time" id="endTime" name="endTime" class="input" required>
+        <select id="endTime" name="endTime" class="select" required>
+          <option value="">Select end</option>
+          @foreach($timeOptions as $val => $label)
+            <option value="{{ $val }}" @selected(old('endTime') == $val)>{{ $label }}</option>
+          @endforeach
+        </select>
       </div>
 
       <button type="submit" class="btn btn-primary w-full">Add to Schedule</button>
