@@ -113,13 +113,20 @@ Route::get('/admin/schedule/create',  [CreateScheduleController::class, 'showFor
 Route::post('/admin/schedule/create', [CreateScheduleController::class, 'store'])
     ->name('admin.schedule.store');
 
+// Manage the full weekly schedule (all mechanics at once)
+Route::get('/admin/schedule/edit', [CreateScheduleController::class, 'editAll'])
+    ->name('admin.schedule.edit');
+
+Route::put('/admin/schedule/update', [CreateScheduleController::class, 'updateAll'])
+    ->name('admin.schedule.update');
+
 // Manage a single mechanic's weekly schedule
 Route::get('/admin/mechanics/{id}/schedule', [CreateScheduleController::class, 'editForMechanic'])
     ->name('admin.mechanics.schedule.edit');
 
 Route::put('/admin/mechanics/{id}/schedule', [CreateScheduleController::class, 'updateForMechanic'])
     ->name('admin.mechanics.schedule.update');
-    
+
 // Customers
 Route::get('/admin/customers', [ViewCustomersController::class, 'index'])
     ->name('admin.customers');

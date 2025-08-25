@@ -16,6 +16,7 @@
       {{-- Actions --}}
       <a class="card text-center" href="{{ route('admin.add_mechanic.form') }}">Add Mechanic</a>
       <a class="card text-center" href="{{ route('admin.schedule.create') }}">Create Schedule</a>
+      <a class="card text-center" href="{{ route('admin.schedule.edit') }}">Manage Schedules</a>
     </div>
   </section>
 
@@ -36,17 +37,17 @@
             </tr>
           </thead>
           <tbody>
-          @foreach ($mechanics as $m)
-            <tr>
-              <td>{{ $m->FirstName }} {{ $m->LastName }}</td>
-              <td>{{ $m->Email ?? '-' }}</td>
-              <td>{{ $m->Specialty ?? '-' }}</td>
-              <td>{{ $m->PhoneNumber ?? '-' }}</td>
-              <td class="text-right">
-                <a class="btn btn-sm" href="{{ route('admin.mechanics.edit', $m->MechanicID) }}">Edit</a>
-              </td>
-            </tr>
-          @endforeach
+            @foreach ($mechanics as $m)
+              <tr>
+                <td>{{ $m->FirstName }} {{ $m->LastName }}</td>
+                <td>{{ $m->Email ?? '-' }}</td>
+                <td>{{ $m->Specialty ?? '-' }}</td>
+                <td>{{ $m->PhoneNumber ?? '-' }}</td>
+                <td class="text-right">
+                  <a class="btn btn-sm" href="{{ route('admin.mechanics.edit', $m->MechanicID) }}">Edit</a>
+                </td>
+              </tr>
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -58,44 +59,35 @@
     @endif
   </section>
 
-{{-- Weekly Schedule --}}
-<section>
-  <h2 class="heading-brand mb-4">Mechanic Weekly Schedule</h2>
+  {{-- Weekly Schedule --}}
+  <section>
+    <h2 class="heading-brand mb-4">Mechanic Weekly Schedule</h2>
 
-  {{-- Per-mechanic schedule edit buttons --}}
-  <div class="mb-4 flex flex-wrap gap-2">
-    @foreach ($mechanics as $m)
-      <a class="btn btn-sm" href="{{ route('admin.mechanics.schedule.edit', $m->MechanicID) }}">
-        Edit {{ $m->FirstName }} {{ $m->LastName }}'s Schedule
-      </a>
-    @endforeach
-  </div>
-
-  @if(isset($schedule_grid) && !empty($schedule_grid) && isset($mechanics) && $mechanics->isNotEmpty())
-    <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Day</th>
-            @foreach ($mechanics as $m)
-              <th>{{ $m->FirstName }} {{ $m->LastName }}</th>
-            @endforeach
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($schedule_grid as $day => $row)
+    @if(isset($schedule_grid) && !empty($schedule_grid) && isset($mechanics) && $mechanics->isNotEmpty())
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
             <tr>
-              <td>{{ $day }}</td>
+              <th>Day</th>
               @foreach ($mechanics as $m)
-                <td>{{ $row[$m->MechanicID] ?? '' }}</td>
+                <th>{{ $m->FirstName }} {{ $m->LastName }}</th>
               @endforeach
             </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  @else
-    <p class="muted">No schedule data available.</p>
-  @endif
-</section>
+          </thead>
+          <tbody>
+            @foreach ($schedule_grid as $day => $row)
+              <tr>
+                <td>{{ $day }}</td>
+                @foreach ($mechanics as $m)
+                  <td>{{ $row[$m->MechanicID] ?? '' }}</td>
+                @endforeach
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    @else
+      <p class="muted">No schedule data available.</p>
+    @endif
+  </section>
 @endsection
