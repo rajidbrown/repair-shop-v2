@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ViewCustomersController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\MechanicLoginController; 
 
 // Customer
 use App\Http\Controllers\Customer\BookAppointmentController;
@@ -31,7 +32,6 @@ use App\Http\Controllers\Customer\CustomerInfoController;
 use App\Http\Controllers\Customer\CustomerAppointmentController;
 
 // Mechanic
-use App\Http\Controllers\Mechanic\MechanicLoginController;
 use App\Http\Controllers\Mechanic\MechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
 use App\Http\Controllers\Mechanic\ServiceHistoryController;

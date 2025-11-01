@@ -1,59 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Upcoming Appointments</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <style>
-        .appointment-card {
-            background-color: #1f1f1f;
-            border: 2px solid #f4511e;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
+@extends('layouts.mechanic')
 
-        .appointment-card:hover {
-            background-color: #2a2a2a;
-            box-shadow: 0 0 8px #f4511e88;
-        }
+@section('title', 'Upcoming Appointments')
 
-        .info-label {
-            color: #ffcc00;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Upcoming Appointments</h1>
-        <div class="nav-links">
-            <a href="{{ route('mechanic.dashboard') }}">Home</a>
-            <a class="logout-link" href="{{ route('logout') }}">Logout</a>
-        </div>
-    </header>
-
-    <main>
-        <h2>Your Upcoming Appointments</h2>
+@section('content')
+<section class="py-10 px-4 max-w-3xl mx-auto text-white">
+    <div class="bg-[#1f1f1f] border-2 border-orange-600 rounded-xl p-6 shadow-lg">
+        <h1 class="text-3xl font-bold text-yellow-400 mb-6 font-bebas border-b-2 border-orange-600 pb-2">
+            Upcoming Appointments
+        </h1>
 
         @if($appointments->isEmpty())
-            <p style="text-align:center;">You don’t have any upcoming or in-progress appointments at the moment.</p>
+            <p class="text-center text-gray-400">
+                You don’t have any upcoming or in-progress appointments at the moment.
+            </p>
         @else
             @foreach($appointments as $appt)
-                <div class="appointment-card">
-                    <p><span class="info-label">Customer:</span> {{ $appt->FirstName }} {{ $appt->LastName }}</p>
-                    <p><span class="info-label">Bike:</span> {{ $appt->Make }} {{ $appt->Model }} — {{ $appt->Mileage }} miles</p>
-                    <p><span class="info-label">Service:</span> {{ $appt->ServiceName }}</p>
-                    <p><span class="info-label">Appointment Time:</span> {{ $appt->AppointmentDateTime }}</p>
+                <div class="bg-[#2a2a2a] border border-orange-600 rounded-lg p-4 mb-4 hover:bg-[#3a3a3a] transition">
+                    <p><span class="text-yellow-400 font-semibold">Customer:</span> {{ $appt->FirstName }} {{ $appt->LastName }}</p>
+                    <p><span class="text-yellow-400 font-semibold">Bike:</span> {{ $appt->Make }} {{ $appt->Model }} — {{ $appt->Mileage }} miles</p>
+                    <p><span class="text-yellow-400 font-semibold">Service:</span> {{ $appt->ServiceName }}</p>
+                    <p><span class="text-yellow-400 font-semibold">Appointment Time:</span> {{ \Carbon\Carbon::parse($appt->AppointmentDateTime)->format('F j, Y, g:i A') }}</p>
                 </div>
             @endforeach
         @endif
-    </main>
-
-    <footer>
-        &copy; 2025 Shaded Motorworks — All rights reserved
-    </footer>
-</body>
-</html>
+    </div>
+</section>
+@endsection

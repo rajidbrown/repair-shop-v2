@@ -1,65 +1,89 @@
-@extends('layouts.app')
+@extends('layouts.mechanic')
 
-@section('title', 'Update Mechanic Info')
+@section('title', 'Update My Info')
 
 @section('content')
-    <div class="container mt-5">
-        <div class="card bg-dark text-light border-warning">
-            <div class="card-header bg-dark border-warning">
-                <h3 class="text-warning text-center" style="font-family: 'Bebas Neue', cursive;">Update Your Information</h3>
-            </div>
-            <div class="card-body">
+<main class="max-w-2xl mx-auto mt-10 text-white">
+    <h2 class="text-3xl font-bebas text-yellow-400 mb-6 border-b-2 border-orange-600 pb-2">
+        Update My Info
+    </h2>
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('mechanic.info.update') }}">
-                    @csrf
-
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" name="firstName" id="firstName" class="form-control bg-secondary text-light"
-                               value="{{ old('firstName', $mechanic->FirstName ?? '') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" name="lastName" id="lastName" class="form-control bg-secondary text-light"
-                               value="{{ old('lastName', $mechanic->LastName ?? '') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control bg-secondary text-light"
-                               value="{{ old('email', $mechanic->Email ?? '') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="specialty" class="form-label">Specialty</label>
-                        <input type="text" name="specialty" id="specialty" class="form-control bg-secondary text-light"
-                               value="{{ old('specialty', $mechanic->Specialty ?? '') }}">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="text" name="phoneNumber" id="phoneNumber" class="form-control bg-secondary text-light"
-                               value="{{ old('phoneNumber', $mechanic->PhoneNumber ?? '') }}">
-                    </div>
-
-                    <button type="submit" class="btn btn-warning w-100 text-dark fw-bold text-uppercase">
-                        Update Information
-                    </button>
-                </form>
-            </div>
+    @if (session('error'))
+        <div class="bg-red-700 text-white px-4 py-3 rounded mb-4 border border-red-900 font-semibold">
+            {{ session('error') }}
         </div>
-    </div>
+    @endif
+
+    @if (session('success'))
+        <div class="bg-green-700 text-white px-4 py-3 rounded mb-4 border border-green-900 font-semibold">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <form action="{{ route('mechanic.info.update') }}" method="POST" class="space-y-5">
+        @csrf
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">First Name</label>
+            <input type="text" name="firstName" value="{{ old('firstName', $mechanic->FirstName) }}"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('firstName')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">Last Name</label>
+            <input type="text" name="lastName" value="{{ old('lastName', $mechanic->LastName) }}"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('lastName')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">Email</label>
+            <input type="email" name="email" value="{{ old('email', $mechanic->Email) }}"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('email')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">Phone Number</label>
+            <input type="text" name="phoneNumber" value="{{ old('phoneNumber', $mechanic->PhoneNumber) }}"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('phoneNumber')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">Specialty</label>
+            <input type="text" name="specialty" value="{{ old('specialty', $mechanic->Specialty) }}"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('specialty')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold text-sm text-gray-300">
+                New Password
+                <span class="text-xs text-gray-400">(leave blank to keep current password)</span>
+            </label>
+            <input type="password" name="password"
+                   class="w-full bg-[#1f1f1f] border border-gray-600 rounded px-4 py-2 text-white" />
+            @error('password')
+                <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <button type="submit"
+                class="bg-orange-600 hover:bg-orange-700 transition text-white font-semibold px-6 py-2 rounded">
+            Save Changes
+        </button>
+    </form>
+</main>
 @endsection

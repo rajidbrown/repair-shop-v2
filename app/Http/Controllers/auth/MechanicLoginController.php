@@ -28,7 +28,7 @@ class MechanicLoginController extends Controller
 
         if ($mechanic && password_verify($password, $mechanic->Password)) {
             Session::put('mechanic_id', $mechanic->MechanicID);
-            return redirect()->route('mechanic.dashboard'); // Set this route up later
+            return redirect()->route('mechanic.dashboard');
         }
 
         return back()->withErrors(['login_error' => 'Invalid email or password.'])->withInput();

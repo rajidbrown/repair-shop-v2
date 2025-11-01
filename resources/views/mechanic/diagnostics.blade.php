@@ -1,171 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Diagnostics - Shaded Motorworks</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: #ddd;
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-        }
+@extends('layouts.mechanic')
 
-        header {
-            background-color: #333;
-            padding: 20px 40px;
-            text-align: center;
-            border-bottom: 2px solid #f4511e;
-        }
+@section('title', 'Diagnostics - Shaded Motorworks')
 
-        header h1 {
-            font-family: 'Bebas Neue', cursive;
-            color: #ffcc00;
-            margin: 0;
-        }
+@section('content')
+<main class="py-10 px-4 max-w-4xl mx-auto text-white">
+    <section class="bg-[#1f1f1f] border-2 border-orange-600 rounded-xl p-6 shadow-lg">
+        <h2 class="text-3xl font-bold text-yellow-400 mb-6 font-bebas border-b-2 border-orange-600 pb-2">
+            Diagnostics Log
+        </h2>
 
-        nav a {
-            color: #ffcc00;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
+        @if(session('success'))
+            <p class="text-green-500 mb-4 font-semibold">{{ session('success') }}</p>
+        @elseif(session('error'))
+            <p class="text-red-500 mb-4 font-semibold">{{ session('error') }}</p>
+        @endif
 
-        nav a:hover {
-            color: #f4511e;
-        }
+        @if($appointments->isEmpty())
+            <p class="text-gray-300">No bikes assigned currently.</p>
+        @else
+            @foreach ($appointments as $appt)
+                <form method="POST" action="{{ route('mechanic.diagnostics.submit') }}" class="mb-8 bg-[#2a2a2a] border border-gray-700 p-6 rounded-lg shadow hover:shadow-md transition">
+                    @csrf
+                    <input type="hidden" name="appointment_id" value="{{ $appt->AppointmentID }}">
 
-        main {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background: #2a2a2a;
-            border: 2px solid #f4511e;
-            border-radius: 12px;
-        }
+                    <div class="mb-4 text-sm leading-relaxed">
+                        <p><span class="text-yellow-400 font-semibold">Date:</span> {{ \Carbon\Carbon::parse($appt->AppointmentDateTime)->format('F j, Y, g:i A') }}</p>
+                        <p><span class="text-yellow-400 font-semibold">Customer:</span> {{ $appt->FirstName }} {{ $appt->LastName }}</p>
+                        <p><span class="text-yellow-400 font-semibold">Bike:</span> {{ $appt->Year }} {{ $appt->Make }} {{ $appt->Model }}</p>
+                        <p><span class="text-yellow-400 font-semibold">Service:</span> {{ $appt->ServiceName }}</p>
+                    </div>
 
-        h2 {
-            text-align: center;
-            font-family: 'Bebas Neue', cursive;
-            color: #ffcc00;
-            margin-bottom: 30px;
-        }
+                    <div class="mb-4">
+                        <label for="diagnostics_{{ $appt->AppointmentID }}" class="block text-sm font-semibold mb-1 text-yellow-300">Diagnostics</label>
+                        <textarea name="diagnostics" id="diagnostics_{{ $appt->AppointmentID }}" rows="4" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600">{{ $appt->Diagnostics ?? ($diagnosticTemplates[$appt->ServiceName] ?? '') }}</textarea>
+                    </div>
 
-        form {
-            background: #1f1f1f;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-left: 4px solid #ffcc00;
-            border-radius: 6px;
-        }
+                    <div class="mb-4">
+                        <label for="recommendation_{{ $appt->AppointmentID }}" class="block text-sm font-semibold mb-1 text-yellow-300">Recommendation</label>
+                        <textarea name="recommendation" id="recommendation_{{ $appt->AppointmentID }}" rows="3" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600"></textarea>
+                    </div>
 
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: 600;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            margin-top: 6px;
-            border-radius: 6px;
-            border: 1px solid #555;
-            background-color: #333;
-            color: #ddd;
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #f4511e;
-            color: white;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #d1391b;
-        }
-
-        .message {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #00ff99;
-        }
-
-        .error {
-            color: #ff4d4d;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #2a2a2a;
-            color: #aaa;
-            border-top: 2px solid #f4511e;
-        }
-
-        .service-name {
-            font-style: italic;
-            color: #ffa500;
-            margin-bottom: 6px;
-        }
-    </style>
-</head>
-<body>
-<header>
-    <h1>Shaded Motorworks</h1>
-    <nav>
-        <a href="{{ route('mechanic.dashboard') }}">Dashboard</a>
-        <a href="{{ route('mechanic.diagnostics') }}">Diagnostics</a>
-        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-    </nav>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
-</header>
-
-<main>
-    <h2>Diagnostics Log</h2>
-
-    @if(session('success'))
-        <p class="message">{{ session('success') }}</p>
-    @elseif(session('error'))
-        <p class="message error">{{ session('error') }}</p>
-    @endif
-
-    @if($appointments->isEmpty())
-        <p>No bikes assigned currently.</p>
-    @else
-        @foreach ($appointments as $appt)
-            <form method="POST" action="{{ route('mechanic.diagnostics.submit') }}">
-                @csrf
-                <input type="hidden" name="appointment_id" value="{{ $appt->AppointmentID }}">
-                <strong>Date:</strong> {{ \Carbon\Carbon::parse($appt->AppointmentDateTime)->format('F j, Y, g:i A') }}<br>
-                <strong>Customer:</strong> {{ $appt->FirstName }} {{ $appt->LastName }}<br>
-                <strong>Bike:</strong> {{ $appt->Year }} {{ $appt->Make }} {{ $appt->Model }}<br>
-                <div class="service-name">Service: {{ $appt->ServiceName }}</div>
-
-                <label for="diagnostics_{{ $appt->AppointmentID }}">Diagnostics:</label>
-                <textarea name="diagnostics" id="diagnostics_{{ $appt->AppointmentID }}">{{ $appt->Diagnostics ?? ($diagnosticTemplates[$appt->ServiceName] ?? '') }}</textarea>
-
-                <label for="recommendation_{{ $appt->AppointmentID }}">Recommendation:</label>
-                <textarea name="recommendation" id="recommendation_{{ $appt->AppointmentID }}"></textarea>
-
-                <button type="submit">Save</button>
-            </form>
-        @endforeach
-    @endif
+                    <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded transition">
+                        Save
+                    </button>
+                </form>
+            @endforeach
+        @endif
+    </section>
 </main>
-
-<footer>
-    <p>&copy; 2025 Shaded Motorworks</p>
-</footer>
-</body>
-</html>
+@endsection
