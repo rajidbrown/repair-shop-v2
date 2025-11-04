@@ -46,7 +46,7 @@
 
         <div>
             <label for="confirmPassword" class="block font-bold text-gray-300 mb-1">Confirm Password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required class="w-full px-3 py-2 bg-gray-800 border-2 border-gray-600 rounded text-gray-200 focus:border-yellow-400 focus:outline-none">
+            <input type="password" id="confirmPassword" name="password_confirmation" required class="w-full px-3 py-2 bg-gray-800 border-2 border-gray-600 rounded text-gray-200 focus:border-yellow-400 focus:outline-none">
         </div>
 
         <button type="submit" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-lg uppercase">Register</button>

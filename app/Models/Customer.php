@@ -10,19 +10,25 @@ class Customer extends Authenticatable
     use Notifiable;
 
     protected $table = 'customers';
+    protected $primaryKey = 'CustomerID'; // Your actual primary key
+
+    public $timestamps = true; // You have CreatedAt / UpdatedAt columns
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'FirstName',
+        'LastName',
+        'Email',
+        'Password',
+        'PhoneNumber',
+        'Address',
     ];
 
     protected $hidden = [
-        'password',
+        'Password',
         'remember_token',
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'EmailVerifiedAt' => 'datetime',
     ];
 }

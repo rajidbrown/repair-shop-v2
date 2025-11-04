@@ -1,22 +1,23 @@
 {{-- resources/views/admin/dashboard.blade.php --}}
-@extends('layouts.admin')
-@section('title', 'Dashboard')
+@extends('layouts.dashboard')
+
+@section('title', 'Admin Dashboard')
 
 @section('content')
   {{-- Quick actions --}}
   <section class="mb-10">
     <h2 class="heading-brand mb-4">Admin Quick Access</h2>
 
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <a class="card text-center" href="{{ route('admin.customers') }}">View Customers</a>
-      <a class="card text-center" href="{{ route('admin.appointments.upcoming') }}">Upcoming Appointments</a>
-      <a class="card text-center" href="{{ route('admin.invoices') }}">View Invoices</a>
-      <a class="card text-center" href="{{ route('admin.settings') }}">Settings</a>
+    <div class="tiles">
+      <a class="tile text-center" href="{{ route('admin.customers') }}">View Customers</a>
+      <a class="tile text-center" href="{{ route('admin.appointments.upcoming') }}">Upcoming Appointments</a>
+      <a class="tile text-center" href="{{ route('admin.invoices') }}">View Invoices</a>
+      <a class="tile text-center" href="{{ route('admin.settings') }}">Settings</a>
 
       {{-- Actions --}}
-      <a class="card text-center" href="{{ route('admin.add_mechanic.form') }}">Add Mechanic</a>
-      <a class="card text-center" href="{{ route('admin.schedule.create') }}">Create Schedule</a>
-      <a class="card text-center" href="{{ route('admin.schedule.edit') }}">Manage Schedules</a>
+      <a class="tile text-center" href="{{ route('admin.add_mechanic.form') }}">Add Mechanic</a>
+      <a class="tile text-center" href="{{ route('admin.schedule.create') }}">Create Schedule</a>
+      <a class="tile text-center" href="{{ route('admin.schedule.edit') }}">Manage Schedules</a>
     </div>
   </section>
 
