@@ -19,21 +19,23 @@ class CustomerLoginController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|string',
         ]);
 
-        $customer = DB::table('Customers')
-            ->where('Email', $request->input('email'))
-            ->first();
+        $customer = DB::table('customers')->where('Email', $request->email)->first();
 
-        if ($customer && Hash::check($request->input('password'), $customer->Password)) {
-            Session::put('customer_logged_in', true);
+        if ($customer && Hash::check($request->password, $customer->Password)) {
             Session::put('customer_id', $customer->CustomerID);
+            Session::put('customer_name', $customer->FirstName . ' ' . $customer->LastName);
             return redirect()->route('customer.dashboard');
-        } else {
-            return redirect()->route('login.customer')
-                ->withErrors(['login' => 'Invalid credentials.'])
-                ->withInput();
         }
+
+        return back()->withErrors(['login' => 'Invalid email or password.'])->withInput();
+    }
+
+    public function logout()
+    {
+        Session::forget(['customer_id', 'customer_name']);
+        return redirect()->route('login.customer');
     }
 }

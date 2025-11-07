@@ -3,10 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 // ---------------------
-// Controllers
+// Admin Controllers
 // ---------------------
-
-// Admin
 use App\Http\Controllers\Admin\AddMechanicController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\InvoiceController as AdminInvoiceController;
@@ -14,24 +12,30 @@ use App\Http\Controllers\Admin\CreateScheduleController;
 use App\Http\Controllers\Admin\UpcomingAppointmentsController as AdminUpcomingAppointmentsController;
 use App\Http\Controllers\Admin\ViewCustomersController;
 
-// Auth
+// ---------------------
+// Auth Controllers
+// ---------------------
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\MechanicLoginController; 
-
-// Customer
+use App\Http\Controllers\Auth\MechanicLoginController;
+use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\RegisterCustomerController;
-use App\Http\Controllers\Customer\CustomerLoginController;
+
+// ---------------------
+// Customer Controllers
+// ---------------------
 use App\Http\Controllers\Customer\BookAppointmentController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
-use App\Http\Controllers\Customer\DiagnosticsController;
+use App\Http\Controllers\Customer\CustomerDiagnosticsController;
 use App\Http\Controllers\Customer\CustomerInvoiceController;
 use App\Http\Controllers\Customer\BikeController;
 use App\Http\Controllers\Customer\CustomerServiceHistoryController;
 use App\Http\Controllers\Customer\CustomerInfoController;
 use App\Http\Controllers\Customer\CustomerAppointmentController;
 
-// Mechanic
+// ---------------------
+// Mechanic Controllers
+// ---------------------
 use App\Http\Controllers\Mechanic\MechanicDashboardController;
 use App\Http\Controllers\Mechanic\MechanicDiagnosticsController;
 use App\Http\Controllers\Mechanic\ServiceHistoryController;
@@ -42,9 +46,8 @@ use App\Http\Controllers\Mechanic\TodayAppointmentsController;
 use App\Http\Controllers\Mechanic\MechanicCustomersController;
 
 // ---------------------
-// Public / Static
+// Static Pages
 // ---------------------
-
 Route::view('/', 'welcome')->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/faq', 'faq')->name('faq');
@@ -59,7 +62,7 @@ Route::get('/register', [RegisterCustomerController::class, 'showForm'])->name('
 Route::post('/register', [RegisterCustomerController::class, 'register'])->name('register.submit');
 
 // Customer Login
-Route::view('/login/customer', 'auth.login_customer')->name('login.customer');
+Route::get('/login/customer', [CustomerLoginController::class, 'showLoginForm'])->name('login.customer');
 Route::post('/login/customer', [CustomerLoginController::class, 'login'])->name('customer.login.submit');
 
 // Mechanic Login
@@ -76,19 +79,18 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 // ---------------------
 // Admin Routes
 // ---------------------
-
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::view('/settings', 'admin.settings')->name('settings');
 
     // Mechanics
-    Route::get('/add-mechanic',  [AddMechanicController::class, 'showForm'])->name('add_mechanic.form');
+    Route::get('/add-mechanic', [AddMechanicController::class, 'showForm'])->name('add_mechanic.form');
     Route::post('/add-mechanic', [AddMechanicController::class, 'store'])->name('add_mechanic.store');
     Route::get('/mechanics/{id}/edit', [AddMechanicController::class, 'edit'])->name('mechanics.edit');
     Route::put('/mechanics/{id}', [AddMechanicController::class, 'update'])->name('mechanics.update');
 
     // Schedule Management
-    Route::get('/schedule/create',  [CreateScheduleController::class, 'showForm'])->name('schedule.create');
+    Route::get('/schedule/create', [CreateScheduleController::class, 'showForm'])->name('schedule.create');
     Route::post('/schedule/create', [CreateScheduleController::class, 'store'])->name('schedule.store');
     Route::get('/schedule/edit', [CreateScheduleController::class, 'editAll'])->name('schedule.edit');
     Route::put('/schedule/update', [CreateScheduleController::class, 'updateAll'])->name('schedule.update');
@@ -106,23 +108,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // ---------------------
 // Customer Routes
 // ---------------------
-
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/book-appointment',  [BookAppointmentController::class, 'showForm'])->name('book_appointment.form');
+    Route::get('/book-appointment', [BookAppointmentController::class, 'showForm'])->name('book_appointment.form');
     Route::post('/book-appointment', [BookAppointmentController::class, 'store'])->name('book_appointment.store');
 
     Route::get('/invoices', [CustomerInvoiceController::class, 'index'])->name('invoices');
-    Route::get('/diagnostics', [DiagnosticsController::class, 'index'])->name('diagnostics');
+    Route::get('/diagnostics', [CustomerDiagnosticsController::class, 'index'])->name('diagnostics');
 
-    Route::get('/my-bike',  [BikeController::class, 'showForm'])->name('my_bike');
+    Route::get('/my-bike', [BikeController::class, 'showForm'])->name('bike');
     Route::post('/my-bike', [BikeController::class, 'update'])->name('my_bike.update');
 
     Route::get('/service-history', [CustomerServiceHistoryController::class, 'index'])->name('service_history');
     Route::view('/settings', 'customer.settings')->name('settings');
 
-    Route::get('/update-info',  [CustomerInfoController::class, 'showForm'])->name('update_info');
+    Route::get('/update-info', [CustomerInfoController::class, 'showForm'])->name('update_info');
     Route::post('/update-info', [CustomerInfoController::class, 'update'])->name('update_info.submit');
 
     Route::get('/appointments', [CustomerAppointmentController::class, 'index'])->name('appointments');
@@ -132,11 +133,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
 // ---------------------
 // Mechanic Routes
 // ---------------------
-
 Route::prefix('mechanic')->name('mechanic.')->group(function () {
     Route::get('/dashboard', [MechanicDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/diagnostics',  [MechanicDiagnosticsController::class, 'index'])->name('diagnostics');
+    Route::get('/diagnostics', [MechanicDiagnosticsController::class, 'index'])->name('diagnostics');
     Route::post('/diagnostics', [MechanicDiagnosticsController::class, 'store'])->name('diagnostics.submit');
 
     Route::get('/service-history', [ServiceHistoryController::class, 'index'])->name('service_history');

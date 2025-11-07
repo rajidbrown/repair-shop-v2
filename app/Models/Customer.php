@@ -10,9 +10,9 @@ class Customer extends Authenticatable
     use Notifiable;
 
     protected $table = 'customers';
-    protected $primaryKey = 'CustomerID'; // Your actual primary key
+    protected $primaryKey = 'CustomerID'; // Custom PK
 
-    public $timestamps = true; // You have CreatedAt / UpdatedAt columns
+    public $timestamps = true; // Matches CreatedAt / UpdatedAt
 
     protected $fillable = [
         'FirstName',
@@ -31,4 +31,20 @@ class Customer extends Authenticatable
     protected $casts = [
         'EmailVerifiedAt' => 'datetime',
     ];
-}
+
+    /**
+     * Tell Laravel which field to use for authentication.
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'Email'; // exactly as it appears in the DB
+    }
+
+    /**
+     * Override the default password column name.
+     */
+    public function getAuthPassword()
+    {
+        return $this->Password; // match your DB column name
+    }
+} 

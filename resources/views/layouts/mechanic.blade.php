@@ -3,34 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Mechanic') • Shaded Motorworks</title>
+    <title>@yield('title', 'Customer Dashboard') • Shaded Motorworks</title>
+
+    {{-- Load Vite assets --}}
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-<header class="brand-header flex justify-between items-center">
-    <div class="flex items-center space-x-4">
-        <!-- Back Button -->
-        <button onclick="window.history.back()" class="btn-back">← Back</button>
+<body class="min-h-screen bg-black text-yellow-400">
 
-        <!-- Brand Title as Home Link -->
-        <a href="{{ route('home') }}" class="brand-title">
-            SHADED MOTORWORKS
-        </a>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="space-x-4">
-        <a class="nav-link" href="{{ route('mechanic.dashboard') }}">Dashboard</a>
-        <a class="nav-link" href="{{ route('login.mechanic') }}">Logout</a>
-    </nav>
+<header class="flex justify-between items-center border-b-2 border-red-600 px-6 py-4">
+    <h1 class="text-2xl font-bold">WELCOME, {{ Auth::guard('customer')->user()->FirstName ?? 'Customer' }}!</h1>
+    <a href="{{ route('logout') }}" class="text-yellow-400 hover:underline">Logout</a>
 </header>
 
-<main class="page">
+<main class="p-6">
     @yield('content')
 </main>
 
-<footer class="surface border-t-4 brand-border px-6 py-5 text-center muted">
-    &copy; {{ date('Y') }} Shaded Motorworks — Mechanic
+<footer class="border-t-2 border-red-600 px-6 py-4 text-center text-yellow-400">
+    &copy; {{ date('Y') }} Shaded Motorworks — Powered by Precision.
 </footer>
+
 </body>
 </html>

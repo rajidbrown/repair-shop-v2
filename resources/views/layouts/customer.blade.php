@@ -7,34 +7,32 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-<header class="brand-header flex justify-between items-center">
+<header class="brand-header flex justify-between items-center px-6 py-4 border-b-4 brand-border">
     <div class="flex items-center space-x-4">
-        <!-- Back Button (hidden on welcome page) -->
-        @unless(Route::currentRouteName() === 'welcome')
-            <button onclick="window.history.back()" class="btn-back">← Back</button>
-        @endunless
-        
-        <!-- Brand Title -->
-        <a href="{{ route('home') }}" class="brand-title">
+        <button onclick="window.history.back()" class="btn-back">← Back</button>
+        <a href="{{ route('customer.dashboard') }}" class="brand-title">
             SHADED MOTORWORKS
         </a>
     </div>
 
-    <!-- Navigation -->
-    <nav class="space-x-4">
-        <a class="nav-link" href="{{ route('login.customer') }}">Customer Login</a>
-        <a class="nav-link" href="{{ route('login.mechanic') }}">Mechanic Login</a>
-        <a class="nav-link" href="{{ route('login.admin') }}">Admin Login</a>
-        <a class="nav-link" href="{{ route('register') }}">Register</a>
+    <nav class="space-x-4 flex items-center">
+        <span class="text-yellow-400 font-semibold">
+            {{ auth('customer')->user()->FirstName ?? 'Customer' }}
+        </span>
+
+        <form method="POST" action="{{ route('logout') }}" class="inline">
+            @csrf
+            <button type="submit" class="nav-link">Logout</button>
+        </form>
     </nav>
 </header>
 
-<main class="page">
+<main class="page px-6 py-8">
     @yield('content')
 </main>
 
 <footer class="surface border-t-4 brand-border px-6 py-5 text-center muted">
-    &copy; {{ date('Y') }} Shaded Motorworks
+    &copy; {{ date('Y') }} Shaded Motorworks — Customer
 </footer>
 </body>
 </html>
