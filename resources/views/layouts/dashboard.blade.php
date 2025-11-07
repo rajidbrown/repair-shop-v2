@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
 
     <style>
-        /* ===== GLOBAL RESET ===== */
         * {
             box-sizing: border-box;
         }
@@ -19,7 +18,6 @@
             color: #eee;
         }
 
-        /* ===== HEADER ===== */
         header {
             background-color: #1a1a1a;
             color: #ffcc00;
@@ -52,7 +50,6 @@
             color: #f4511e;
         }
 
-        /* ===== MAIN ===== */
         main {
             padding: 50px 20px;
             max-width: 1200px;
@@ -68,7 +65,6 @@
             margin-bottom: 30px;
         }
 
-        /* ===== TILES ===== */
         .tiles {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -99,7 +95,6 @@
             box-shadow: 0 0 12px #f4511e70;
         }
 
-        /* ===== TABLES ===== */
         .table-wrap {
             overflow-x: auto;
             margin: 40px 0 60px 0;
@@ -149,7 +144,6 @@
             text-align: right;
         }
 
-        /* ===== BUTTONS ===== */
         .btn {
             background-color: #f4511e;
             color: #fff;
@@ -179,7 +173,6 @@
             text-align: center;
         }
 
-        /* ===== FOOTER ===== */
         footer {
             text-align: center;
             padding: 20px;
@@ -190,7 +183,6 @@
             margin-top: 60px;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media screen and (max-width: 768px) {
             .tiles {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -209,7 +201,15 @@
 </head>
 <body>
     <header>
-        <h1>Welcome, {{ Auth::user()->name ?? 'User' }}!</h1>
+        <h1>
+            Welcome, 
+            {{ session('name') 
+                ?? session('admin_username') 
+                ?? session('customer_name') 
+                ?? session('mechanic_name') 
+                ?? 'User' 
+            }}!
+        </h1>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="logout-link">Logout</button>
