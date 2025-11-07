@@ -3,11 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <header class="mb-10 text-center">
-        <h1 class="text-3xl font-bold text-yellow-400">
-            Welcome, {{ $customer->FirstName }}!
-        </h1>
-    </header>
 
     <h2 class="text-2xl text-center text-yellow-300 mb-6 font-bebas">Customer Dashboard</h2>
 
