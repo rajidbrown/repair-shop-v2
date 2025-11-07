@@ -10,7 +10,7 @@ class ViewCustomersController extends Controller
     public function index()
     {
         $customers = DB::table('Customers')
-            ->select('CustomerID', 'FirstName', 'LastName', 'Email', 'PhoneNumber')
+            ->select('CustomerID', 'FirstName', 'LastName', 'Email', 'PhoneNumber', 'CreatedAt')
             ->orderBy('LastName')
             ->orderBy('FirstName')
             ->get();

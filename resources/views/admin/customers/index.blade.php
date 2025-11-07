@@ -7,9 +7,7 @@
     <h2 class="text-center font-bebas text-3xl text-yellow-400">Registered Customers</h2>
 
     @php
-        // Normalize input:
-        // - Preferred: $customers = collection of customers, each having ->bikes (array/collection)
-        // - Fallback:  $customerRows = flat rows from a LEFT JOIN (like the legacy PHP)
+        // Normalize input sources
         $hasStructured = isset($customers) && count($customers ?? []) > 0;
         $hasFlatRows   = !$hasStructured && isset($customerRows) && count($customerRows ?? []) > 0;
     @endphp
@@ -30,40 +28,32 @@
                 </thead>
 
                 <tbody>
+                {{-- ✅ Structured collection of customers (each has ->bikes) --}}
                 @if($hasStructured)
                     @foreach ($customers as $c)
                         <tr class="even:bg-[#292929] hover:bg-[#3a3a3a]">
                             <td class="p-3 border border-[#444]">
-                                {{ $c->FirstName ?? $c['FirstName'] ?? '' }}
-                                {{ $c->LastName ?? $c['LastName'] ?? '' }}
+                                {{ $c->FirstName ?? '' }} {{ $c->LastName ?? '' }}
                             </td>
                             <td class="p-3 border border-[#444]">
-                                {{ $c->Email ?? $c['Email'] ?? '' }}
+                                {{ $c->Email ?? '' }}
                             </td>
                             <td class="p-3 border border-[#444]">
-                                {{ $c->PhoneNumber ?? $c['PhoneNumber'] ?? '' }}
+                                {{ $c->PhoneNumber ?? '' }}
                             </td>
                             <td class="p-3 border border-[#444]">
-                                @php
-                                    $created = $c->CreatedAt ?? $c['CreatedAt'] ?? null;
-                                @endphp
-                                {{ $created ? \Carbon\Carbon::parse($created)->format('M d, Y') : '' }}
+                                {{ $c->CreatedAt ? \Carbon\Carbon::parse($c->CreatedAt)->format('M d, Y') : '' }}
                             </td>
                             <td class="p-3 border border-[#444]">
-                                @php
-                                    $bikes = $c->bikes ?? $c['bikes'] ?? [];
-                                @endphp
-
+                                @php $bikes = $c->bikes ?? []; @endphp
                                 @if(empty($bikes))
                                     <span class="text-gray-400">—</span>
                                 @else
                                     @foreach ($bikes as $b)
                                         <div>
-                                            {{ ($b->Make ?? $b['Make'] ?? '') }}
-                                            {{ ($b->Model ?? $b['Model'] ?? '') }}
-                                            @php $mileage = $b->Mileage ?? $b['Mileage'] ?? null; @endphp
-                                            @if(!is_null($mileage))
-                                                — {{ number_format((int)$mileage) }} miles
+                                            {{ $b->Make ?? '' }} {{ $b->Model ?? '' }}
+                                            @if(!empty($b->Mileage))
+                                                — {{ number_format((int)$b->Mileage) }} miles
                                             @endif
                                         </div>
                                     @endforeach
@@ -72,26 +62,26 @@
                         </tr>
                     @endforeach
 
+                {{-- ✅ Flat JOIN-based dataset fallback --}}
                 @elseif($hasFlatRows)
                     @php $currentId = null; @endphp
                     @foreach ($customerRows as $row)
                         @php
-                            $cid = $row['CustomerID'] ?? $row->CustomerID ?? null;
-                            $first = $row['FirstName'] ?? $row->FirstName ?? '';
-                            $last  = $row['LastName']  ?? $row->LastName  ?? '';
-                            $email = $row['Email']     ?? $row->Email     ?? '';
-                            $phone = $row['PhoneNumber'] ?? $row->PhoneNumber ?? '';
-                            $created = $row['CreatedAt'] ?? $row->CreatedAt ?? null;
-
-                            $make  = $row['Make']   ?? $row->Make   ?? null;
-                            $model = $row['Model']  ?? $row->Model  ?? null;
-                            $miles = $row['Mileage']?? $row->Mileage?? null;
+                            $cid     = $row->CustomerID ?? null;
+                            $first   = $row->FirstName ?? '';
+                            $last    = $row->LastName ?? '';
+                            $email   = $row->Email ?? '';
+                            $phone   = $row->PhoneNumber ?? '';
+                            $created = $row->CreatedAt ?? null;
+                            $make    = $row->Make ?? null;
+                            $model   = $row->Model ?? null;
+                            $miles   = $row->Mileage ?? null;
                         @endphp
 
                         @if ($cid !== $currentId)
                             @if (!is_null($currentId))
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             @endif
 
                             <tr class="even:bg-[#292929] hover:bg-[#3a3a3a]">
