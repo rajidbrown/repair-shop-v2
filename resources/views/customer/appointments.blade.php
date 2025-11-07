@@ -1,4 +1,4 @@
-@extends('layouts.customer_dashboard')
+@extends('layouts.customer')
 
 @section('title', 'My Appointments')
 

@@ -111,8 +111,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/book-appointment', [BookAppointmentController::class, 'showForm'])->name('book_appointment.form');
-    Route::post('/book-appointment', [BookAppointmentController::class, 'store'])->name('book_appointment.store');
+    Route::get('/book-appointment', [BookAppointmentController::class, 'showForm'])->name('appointment.form');
+    Route::post('/book-appointment', [BookAppointmentController::class, 'store'])->name('appointment.book');
 
     Route::get('/invoices', [CustomerInvoiceController::class, 'index'])->name('invoices');
     Route::get('/diagnostics', [CustomerDiagnosticsController::class, 'index'])->name('diagnostics');
