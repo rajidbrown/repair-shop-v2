@@ -22,7 +22,6 @@
 
         <!-- Navigation -->
         <nav class="space-x-4">
-            <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
             <a class="nav-link" href="{{ route('login.admin') }}">Logout</a>
         </nav>
     </header>

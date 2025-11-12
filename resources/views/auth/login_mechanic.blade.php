@@ -1,5 +1,5 @@
 {{-- resources/views/auth/login_mechanic.blade.php --}}
-@extends('layouts.customer')
+@extends('layouts.mechanic')
 @section('title', 'Mechanic Login')
 
 @section('content')

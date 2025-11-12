@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BikeController extends Controller
 {
     public function showForm()
     {
-        $customerID = Auth::guard('customer')->id();
+        $customerID = session('customer_id');
+
+        if (!$customerID) {
+            abort(403, 'Unauthorized. Customer not logged in.');
+        }
 
         $bike = DB::table('Bikes')
             ->where('CustomerID', $customerID)
@@ -22,7 +25,11 @@ class BikeController extends Controller
 
     public function update(Request $request)
     {
-        $customerID = Auth::guard('customer')->id();
+        $customerID = session('customer_id');
+
+        if (!$customerID) {
+            return redirect()->back()->withErrors(['error' => 'You must be logged in as a customer.']);
+        }
 
         $validated = $request->validate([
             'year' => 'required|integer|min:1900|max:2099',
@@ -55,6 +62,6 @@ class BikeController extends Controller
             ]);
         }
 
-        return redirect()->route('customer.my_bike')->with('success', 'Your bike information has been updated successfully!');
+        return redirect()->route('customer.bike')->with('success', 'Your bike information has been updated successfully!');
     }
 }

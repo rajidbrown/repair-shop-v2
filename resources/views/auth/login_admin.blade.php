@@ -1,5 +1,5 @@
 {{-- resources/views/auth/login_admin.blade.php --}}
-@extends('layouts.customer')
+@extends('layouts.admin')
 @section('title', 'Admin Login')
 
 @section('content')

@@ -1,47 +1,70 @@
 @extends('layouts.customer')
-
 @section('title', 'Book Appointment')
 
 @section('content')
-<h1 class="page-title">Booking</h1>
+<section class="card max-w-2xl mx-auto">
+  <h2 class="heading-brand mb-4">Schedule a Service</h2>
 
-<main>
-<form method="POST" class="form-box" action="{{ route('customer.appointment.book') }}">
+  @if(session('message'))
+    <div class="alert mb-4">{{ session('message') }}</div>
+  @endif
+
+  @if ($errors->any())
+    <div class="alert alert-error mb-4">
+      <div><strong>There were some problems with your input:</strong></div>
+      <ul class="list-disc pl-6 mt-2">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  <form method="POST" action="{{ route('customer.appointment.book') }}" class="space-y-4">
     @csrf
-    <h2>SCHEDULE A SERVICE</h2>
-    @if(session('message'))
-        <p class="message">{{ session('message') }}</p>
-    @endif
 
-    <label for="bike_id">Select Your Bike:</label>
-    <select id="bike_id" name="bike_id" required>
+    <!-- Bike Selection -->
+    <div>
+      <label for="bike_id" class="label">Select Your Bike</label>
+      <select id="bike_id" name="bike_id" class="select" required>
         <option value="">-- Select a bike --</option>
         @foreach($bikes as $bike)
-            <option value="{{ $bike->BikeID }}">
-                {{ $bike->Year }} {{ $bike->Make }} {{ $bike->Model }}
-            </option>
+          <option value="{{ $bike->BikeID }}">
+            {{ $bike->Year }} {{ $bike->Make }} {{ $bike->Model }}
+          </option>
         @endforeach
-    </select>
+      </select>
+    </div>
 
-    <label for="serviceID">Service Type:</label>
-    <select id="serviceID" name="serviceID" required>
+    <!-- Service Selection -->
+    <div>
+      <label for="serviceID" class="label">Service Type</label>
+      <select id="serviceID" name="serviceID" class="select" required>
         <option value="">-- Select a service --</option>
         @foreach($services as $service)
-            <option value="{{ $service->ServiceID }}">{{ $service->ServiceName }}</option>
+          <option value="{{ $service->ServiceID }}">{{ $service->ServiceName }}</option>
         @endforeach
-    </select>
+      </select>
+    </div>
 
-    <label for="appointmentDate">Date:</label>
-    <input type="date" id="appointmentDate" name="appointmentDate" required>
+    <!-- Date -->
+    <div>
+      <label for="appointmentDate" class="label">Date</label>
+      <input type="date" id="appointmentDate" name="appointmentDate" class="input" required>
+    </div>
 
-    <label for="appointmentTime">Time:</label>
-    <select id="appointmentTime" name="appointmentTime" required>
+    <!-- Time -->
+    <div>
+      <label for="appointmentTime" class="label">Time</label>
+      <select id="appointmentTime" name="appointmentTime" class="select" required>
         <option value="">-- Select a time --</option>
-    </select>
+      </select>
+    </div>
 
-    <button type="submit">Book Appointment</button>
-</form>
-</main>
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary w-full">Book Appointment</button>
+  </form>
+</section>
 @endsection
 
 @section('scripts')
