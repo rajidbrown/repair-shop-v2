@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller; // ✅ THIS LINE IS REQUIRED
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class BookAppointmentController extends Controller
 {
+    /**
+     * Show the appointment booking form
+     */
     public function showForm()
     {
         $customerID = Session::get('customer_id');
@@ -25,10 +27,11 @@ class BookAppointmentController extends Controller
         return view('customer.appointments.book', compact('bikes', 'services'));
     }
 
+    /**
+     * Handle appointment booking
+     */
     public function store(Request $request)
     {
-        $bookingMessage = "";
-
         $request->validate([
             'bike_id' => 'required|integer',
             'serviceID' => 'required|integer',
@@ -43,6 +46,7 @@ class BookAppointmentController extends Controller
         $appointmentTime = $request->appointmentTime;
         $selectedSlot = "$appointmentDate $appointmentTime";
 
+        // Check if the exact slot is already booked
         $existing = DB::table('Appointments')
             ->where('AppointmentDateTime', $selectedSlot)
             ->exists();
@@ -51,6 +55,7 @@ class BookAppointmentController extends Controller
             $bookingMessage = "That time slot is already booked. Please choose another.";
         } else {
             $service = DB::table('Services')->where('ServiceID', $repairID)->first();
+
             if (!$service) {
                 $bookingMessage = "Invalid service selected.";
             } else {
@@ -61,6 +66,7 @@ class BookAppointmentController extends Controller
                 $time = Carbon::parse($selectedSlot)->format('H:i:s');
                 $endTime = Carbon::parse($selectedSlot)->addMinutes($duration)->format('H:i:s');
 
+                // Find an available mechanic for this slot
                 $mechanic = DB::table('Mechanics as m')
                     ->join('Schedule as s', 'm.MechanicID', '=', 's.MechanicID')
                     ->where('m.Specialty', $serviceName)
@@ -72,7 +78,10 @@ class BookAppointmentController extends Controller
                               ->from('Appointments as a')
                               ->whereRaw('a.MechanicID = m.MechanicID')
                               ->where('a.AppointmentDateTime', '<', $selectedSlot)
-                              ->whereRaw("DATE_ADD(a.AppointmentDateTime, INTERVAL {$duration} MINUTE) > ?", [$selectedSlot]);
+                              ->whereRaw(
+                                  "datetime(a.AppointmentDateTime, '+' || ? || ' minutes') > ?",
+                                  [$duration, $selectedSlot]
+                              );
                     })
                     ->select('m.MechanicID')
                     ->first();

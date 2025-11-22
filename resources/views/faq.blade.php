@@ -6,7 +6,7 @@
         Frequently Asked Questions
     </h2>
 
-    <div class="space-y-8">
+    <div class="bg-[var(--color-surface)] p-6 border-2 brand-border rounded-lg shadow-lg space-y-8">
         <div class="faq">
             <h3 class="text-lg font-semibold text-[var(--color-accent)]">Do I need an account to book?</h3>
             <p class="text-gray-300">Yes — it helps us track service history and communicate effectively with you.</p>

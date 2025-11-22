@@ -3,10 +3,16 @@
 
 @section('content')
 <section class="card max-w-2xl mx-auto">
-  <h2 class="heading-brand mb-4">Schedule a Service</h2>
+  <h2 class="heading-brand mb-2 flex justify-between items-center">
+    Schedule a Service
+    <a href="{{ route('customer.appointments.blade') }}" class="text-yellow-400 font-semibold hover:underline text-sm">
+      View My Appointments →
+    </a>
+  </h2>
 
-  @if(session('message'))
-    <div class="alert mb-4">{{ session('message') }}</div>
+  {{-- Success / Error Messages --}}
+  @if(session('bookingMessage'))
+    <div class="alert mb-4">{{ session('bookingMessage') }}</div>
   @endif
 
   @if ($errors->any())
@@ -78,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceID = serviceSelect.value;
         const date = dateInput.value;
 
-        // Reset if no service or date
         if (!serviceID || !date) {
             timeSelect.innerHTML = '<option value="">-- Select a time --</option>';
             return;
@@ -88,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(res => res.json())
             .then(data => {
                 timeSelect.innerHTML = '<option value="">-- Select a time --</option>';
-
                 if (data.length === 0) {
                     const option = document.createElement('option');
                     option.value = '';
@@ -96,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     timeSelect.appendChild(option);
                     return;
                 }
-
                 data.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time;

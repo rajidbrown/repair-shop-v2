@@ -20,9 +20,6 @@
     </div>
 
     <nav class="space-x-4 flex items-center">
-        <span class="text-yellow-400 font-semibold">
-            {{ auth('customer')->user()->FirstName ?? 'Customer' }}
-        </span>
 
         <form method="POST" action="{{ route('logout') }}" class="inline">
             @csrf
