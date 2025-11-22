@@ -78,21 +78,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceID = serviceSelect.value;
         const date = dateInput.value;
 
+        // Reset if no service or date
         if (!serviceID || !date) {
             timeSelect.innerHTML = '<option value="">-- Select a time --</option>';
             return;
         }
 
-        fetch(`/get-available-times?serviceID=${serviceID}&date=${date}`)
+        fetch(`/api/get-available-times?serviceID=${serviceID}&date=${date}`)
             .then(res => res.json())
             .then(data => {
                 timeSelect.innerHTML = '<option value="">-- Select a time --</option>';
+
+                if (data.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No available slots';
+                    timeSelect.appendChild(option);
+                    return;
+                }
+
                 data.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time;
                     option.textContent = time;
                     timeSelect.appendChild(option);
                 });
+            })
+            .catch(err => {
+                console.error('Error fetching available times:', err);
+                timeSelect.innerHTML = '<option value="">Error loading times</option>';
             });
     }
 

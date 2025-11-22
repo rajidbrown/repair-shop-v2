@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AvailableTimesController extends Controller
 {
@@ -13,23 +14,26 @@ class AvailableTimesController extends Controller
         $date = $request->query('date');
         $serviceID = $request->query('serviceID');
 
+        Log::info("API Called: date={$date}, serviceID={$serviceID}");
+
         if (empty($date) || empty($serviceID)) {
             return response()->json([]);
         }
 
         $dayOfWeek = date('l', strtotime($date));
 
-        // Get service duration and name
+        // Get service
         $service = DB::table('Services')
             ->select('DurationMinutes', 'ServiceName')
             ->where('ServiceID', $serviceID)
             ->first();
 
         if (!$service) {
+            Log::info("No service found for ID {$serviceID}");
             return response()->json([]);
         }
 
-        // Get matching schedules for that day and specialty
+        // Get mechanics' schedules for this service & day
         $schedules = DB::table('Schedule as s')
             ->join('Mechanics as m', 's.MechanicID', '=', 'm.MechanicID')
             ->where('s.DayOfWeek', $dayOfWeek)
@@ -38,15 +42,18 @@ class AvailableTimesController extends Controller
             ->get();
 
         if ($schedules->isEmpty()) {
+            Log::info("No schedules available for day {$dayOfWeek} and specialty {$service->ServiceName}");
             return response()->json([]);
         }
 
-        // Build time slots
+        // Build 15-minute time intervals
         $timeSlots = [];
         foreach ($schedules as $row) {
             $start = strtotime($date . ' ' . $row->StartTime);
-            $end = strtotime($date . ' ' . $row->EndTime) - ($service->DurationMinutes * 60);
-            for ($t = $start; $t <= $end; $t += 15 * 60) {
+            $end = strtotime($date . ' ' . $row->EndTime);
+            $durationSec = $service->DurationMinutes * 60;
+
+            for ($t = $start; $t <= $end - $durationSec; $t += 15 * 60) {
                 $timeSlots[] = [
                     'time' => date('H:i:s', $t),
                     'MechanicID' => $row->MechanicID
@@ -54,19 +61,21 @@ class AvailableTimesController extends Controller
             }
         }
 
-        // Filter out overbooked slots
+        // Filter conflicting slots
         $available = [];
 
         foreach ($timeSlots as $slot) {
-            $slotStart = $date . ' ' . $slot['time'];
+            $slotStart = "{$date} {$slot['time']}";
             $slotEnd = date('Y-m-d H:i:s', strtotime($slotStart) + ($service->DurationMinutes * 60));
 
+            // SQLite-compatible conflict detection
             $conflictCount = DB::table('Appointments')
                 ->where('MechanicID', $slot['MechanicID'])
                 ->where('AppointmentDateTime', '<', $slotEnd)
-                ->whereRaw("DATE_ADD(AppointmentDateTime, INTERVAL ? MINUTE) > ?", [
-                    $service->DurationMinutes, $slotStart
-                ])
+                ->whereRaw(
+                    "datetime(AppointmentDateTime, '+' || ? || ' minutes') > ?",
+                    [$service->DurationMinutes, $slotStart]
+                )
                 ->count();
 
             if ($conflictCount === 0) {
