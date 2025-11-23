@@ -2,11 +2,11 @@
 @section('title', 'Book Appointment')
 
 @section('content')
-<section class="card max-w-2xl mx-auto">
-  <h2 class="heading-brand mb-2 flex justify-between items-center">
+<section class="card max-w-4xl mx-auto p-6">
+  <h2 class="heading-brand text-3xl mb-6 flex justify-between items-center">
     Schedule a Service
-    <a href="{{ route('customer.appointments.blade') }}" class="text-yellow-400 font-semibold hover:underline text-sm">
-      View My Appointments →
+    <a href="{{ route('customer.appointments') }}" class="text-yellow-400 font-semibold hover:underline text-lg">
+      My Appointments →
     </a>
   </h2>
 

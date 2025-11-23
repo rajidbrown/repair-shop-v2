@@ -32,12 +32,12 @@
 
                     <div class="mb-4">
                         <label for="diagnostics_{{ $appt->AppointmentID }}" class="block text-sm font-semibold mb-1 text-yellow-300">Diagnostics</label>
-                        <textarea name="diagnostics" id="diagnostics_{{ $appt->AppointmentID }}" rows="4" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600">{{ $appt->Diagnostics ?? ($diagnosticTemplates[$appt->ServiceName] ?? '') }}</textarea>
+                        <textarea name="diagnostics" id="diagnostics_{{ $appt->AppointmentID }}" rows="4" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600">{{ old('diagnostics', $appt->Diagnostics ?? ($diagnosticTemplates[$appt->ServiceName] ?? '')) }}</textarea>
                     </div>
 
                     <div class="mb-4">
                         <label for="recommendation_{{ $appt->AppointmentID }}" class="block text-sm font-semibold mb-1 text-yellow-300">Recommendation</label>
-                        <textarea name="recommendation" id="recommendation_{{ $appt->AppointmentID }}" rows="3" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600"></textarea>
+                        <textarea name="recommendation" id="recommendation_{{ $appt->AppointmentID }}" rows="3" class="w-full p-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-600">{{ old('recommendation', $appt->Recommendation ?? '') }}</textarea>
                     </div>
 
                     <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded transition">

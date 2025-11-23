@@ -5,26 +5,33 @@ namespace App\Http\Controllers\Mechanic;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 class MechanicDiagnosticsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $mechanicID = session('mechanic_id');
         if (!$mechanicID) {
             return redirect()->route('login.mechanic');
         }
 
+        // Fetch appointments with diagnostics & recommendation
         $appointments = DB::table('Appointments as A')
             ->join('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
             ->join('Customers as C', 'A.CustomerID', '=', 'C.CustomerID')
             ->join('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
+            ->leftJoin('Diagnostics as D', function ($join) use ($mechanicID) {
+                $join->on('D.AppointmentID', '=', 'A.AppointmentID')
+                     ->where('D.MechanicID', '=', $mechanicID);
+            })
             ->select(
-                'A.AppointmentID', 'A.AppointmentDateTime', 'A.Diagnostics',
+                'A.AppointmentID',
+                'A.AppointmentDateTime',
+                'A.Diagnostics',
                 'B.Year', 'B.Make', 'B.Model',
                 'C.FirstName', 'C.LastName',
-                'S.ServiceName'
+                'S.ServiceName',
+                'D.Recommendation'
             )
             ->where('A.MechanicID', $mechanicID)
             ->where(function ($query) {
@@ -33,6 +40,7 @@ class MechanicDiagnosticsController extends Controller
             ->orderBy('A.AppointmentDateTime', 'asc')
             ->get();
 
+        // Templates for diagnostics default text
         $diagnosticTemplates = [
             "Full Inspection" => "• Check brakes, lights, tires, fluids\n• Look for leaks, wear, damage\n• Test ride for performance\n• Review service history",
             "Brake Service" => "• Inspect pads, rotors, fluid\n• Test brake operation\n• Look for line wear or leaks",
@@ -60,26 +68,26 @@ class MechanicDiagnosticsController extends Controller
         $diagnostics = $request->input('diagnostics');
         $recommendation = $request->input('recommendation');
 
-        // Update diagnostics in Appointments
-        $success1 = DB::table('Appointments')
-            ->where('AppointmentID', $appointmentID)
-            ->where('MechanicID', $mechanicID)
-            ->update(['Diagnostics' => $diagnostics]);
+        try {
+            // Update diagnostics in Appointments
+            DB::table('Appointments')
+                ->where('AppointmentID', $appointmentID)
+                ->where('MechanicID', $mechanicID)
+                ->update(['Diagnostics' => $diagnostics]);
 
-        // Insert or update Diagnostics record
-        $success2 = DB::table('Diagnostics')->updateOrInsert(
-            ['AppointmentID' => $appointmentID, 'MechanicID' => $mechanicID],
-            [
-                'IssueFound' => $diagnostics,
-                'Recommendation' => $recommendation,
-                'CreatedAt' => now()
-            ]
-        );
+            // Insert or update Diagnostics record
+            DB::table('Diagnostics')->updateOrInsert(
+                ['AppointmentID' => $appointmentID, 'MechanicID' => $mechanicID],
+                [
+                    'IssueFound' => $diagnostics,
+                    'Recommendation' => $recommendation,
+                    'CreatedAt' => now()
+                ]
+            );
 
-        if ($success1 && $success2) {
             return redirect()->back()->with('success', '✅ Diagnostic and recommendation saved.');
-        } else {
-            return redirect()->back()->with('error', '❌ Failed to save to both tables.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', '❌ Failed to save: ' . $e->getMessage());
         }
     }
 }

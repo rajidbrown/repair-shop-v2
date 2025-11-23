@@ -11,25 +11,34 @@ class CustomerDiagnosticsController extends Controller
     public function index()
     {
         $customerID = Auth::id();
+        if (!$customerID) {
+            return redirect()->route('login.customer');
+        }
 
-        $diagnostics = DB::table('Diagnostics as D')
-            ->join('Appointments as A', 'D.AppointmentID', '=', 'A.AppointmentID')
-            ->join('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
-            ->join('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
+        // Pull all appointments and join diagnostics
+        $appointments = DB::table('Appointments as A')
+            ->leftJoin('Diagnostics as D', function ($join) {
+                $join->on('A.AppointmentID', '=', 'D.AppointmentID');
+            })
+            ->leftJoin('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
+            ->leftJoin('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
             ->select(
+                'A.AppointmentID',
+                'A.AppointmentDateTime',
                 'D.IssueFound',
                 'D.Recommendation',
-                'D.CreatedAt',
-                'A.AppointmentDateTime',
-                'S.ServiceName',
+                'D.CreatedAt as DiagnosticCreatedAt',
                 'B.Year',
                 'B.Make',
-                'B.Model'
+                'B.Model',
+                'S.ServiceName'
             )
             ->where('A.CustomerID', $customerID)
-            ->orderByDesc('D.CreatedAt')
+            ->orderByDesc('A.AppointmentDateTime')
             ->get();
 
-        return view('customer.diagnostics', compact('diagnostics'));
+        return view('customer.diagnostics', [
+            'appointments' => $appointments
+        ]);
     }
 }

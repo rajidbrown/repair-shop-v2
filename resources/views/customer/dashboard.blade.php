@@ -13,7 +13,6 @@
         <a class="tile" href="{{ route('customer.diagnostics') }}">Diagnostics</a>
         <a class="tile" href="{{ route('customer.service_history') }}">Service History</a>
         <a class="tile" href="{{ route('customer.invoices') }}">Invoices</a>
-        <a class="tile" href="{{ route('customer.update_info') }}">Contact Info</a>
-        <a class="tile" href="{{ route('customer.settings') }}">Settings</a>
+        <a class="tile" href="{{ route('customer.update_info') }}">Account Info</a>
     </div>
 @endsection
