@@ -3,42 +3,40 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CustomerDiagnosticsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $customerID = Auth::id();
+        // Check if customer is logged in via session
+        $customerID = $request->session()->get('customer_id');
+
         if (!$customerID) {
+            // Redirect to login if not logged in
             return redirect()->route('login.customer');
         }
 
-        // Pull all appointments and join diagnostics
-        $appointments = DB::table('Appointments as A')
-            ->leftJoin('Diagnostics as D', function ($join) {
-                $join->on('A.AppointmentID', '=', 'D.AppointmentID');
-            })
-            ->leftJoin('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
-            ->leftJoin('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
+        // Fetch diagnostics for this customer
+        $diagnostics = DB::table('Diagnostics as D')
+            ->join('Appointments as A', 'D.AppointmentID', '=', 'A.AppointmentID')
+            ->join('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
+            ->join('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
             ->select(
-                'A.AppointmentID',
-                'A.AppointmentDateTime',
                 'D.IssueFound',
                 'D.Recommendation',
-                'D.CreatedAt as DiagnosticCreatedAt',
+                'D.CreatedAt',
+                'A.AppointmentDateTime',
+                'S.ServiceName',
                 'B.Year',
                 'B.Make',
-                'B.Model',
-                'S.ServiceName'
+                'B.Model'
             )
             ->where('A.CustomerID', $customerID)
-            ->orderByDesc('A.AppointmentDateTime')
+            ->orderByDesc('D.CreatedAt')
             ->get();
 
-        return view('customer.diagnostics', [
-            'appointments' => $appointments
-        ]);
+        return view('customer.diagnostics', compact('diagnostics'));
     }
 }
