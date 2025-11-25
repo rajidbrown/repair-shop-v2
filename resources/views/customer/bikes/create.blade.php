@@ -1,11 +1,11 @@
 @extends('layouts.customer')
 
-@section('title', 'My Bike')
+@section('title', 'Add New Bike')
 
 @section('content')
 <main class="py-12 px-4 max-w-xl mx-auto text-white">
     <section class="bg-[#1c1c1c] p-8 rounded-xl border-2 border-orange-600 shadow-lg">
-        <h2 class="text-center text-3xl font-bold text-yellow-400 mb-6 font-bebas">My Bike Info</h2>
+        <h2 class="text-center text-3xl font-bold text-yellow-400 mb-6 font-bebas">Add New Bike</h2>
 
         @if (session('success'))
             <div class="bg-green-800 text-green-300 border border-green-500 p-3 rounded mb-4 text-center">
@@ -23,39 +23,39 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('customer.my_bike.update') }}">
+        <form method="POST" action="{{ route('customer.bikes.store') }}">
             @csrf
             <div class="mb-4">
                 <label for="year" class="block font-semibold mb-1">Year:</label>
                 <input type="number" id="year" name="year" required
-                       value="{{ old('year', $bike->Year ?? '') }}"
+                       value="{{ old('year') }}"
                        class="w-full p-3 bg-[#2a2a2a] border border-gray-600 rounded text-white focus:outline-none focus:border-orange-500">
             </div>
 
             <div class="mb-4">
                 <label for="make" class="block font-semibold mb-1">Make:</label>
                 <input type="text" id="make" name="make" required
-                       value="{{ old('make', $bike->Make ?? '') }}"
+                       value="{{ old('make') }}"
                        class="w-full p-3 bg-[#2a2a2a] border border-gray-600 rounded text-white focus:outline-none focus:border-orange-500">
             </div>
 
             <div class="mb-4">
                 <label for="model" class="block font-semibold mb-1">Model:</label>
                 <input type="text" id="model" name="model" required
-                       value="{{ old('model', $bike->Model ?? '') }}"
+                       value="{{ old('model') }}"
                        class="w-full p-3 bg-[#2a2a2a] border border-gray-600 rounded text-white focus:outline-none focus:border-orange-500">
             </div>
 
             <div class="mb-6">
                 <label for="mileage" class="block font-semibold mb-1">Mileage:</label>
                 <input type="text" id="mileage" name="mileage" required
-                       value="{{ old('mileage', $bike->Mileage ?? '') }}"
+                       value="{{ old('mileage') }}"
                        class="w-full p-3 bg-[#2a2a2a] border border-gray-600 rounded text-white focus:outline-none focus:border-orange-500">
             </div>
 
             <button type="submit"
                     class="w-full py-3 bg-orange-600 hover:bg-orange-700 rounded text-white font-bold uppercase transition">
-                Update Bike Info
+                Add Bike
             </button>
         </form>
     </section>

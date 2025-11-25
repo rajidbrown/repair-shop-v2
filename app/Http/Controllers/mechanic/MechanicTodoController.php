@@ -16,22 +16,42 @@ class MechanicTodoController extends Controller
             return redirect()->route('login.mechanic');
         }
 
+        $today = now()->toDateString();
+
         $appointments = DB::table('Appointments as a')
             ->join('Customers as c', 'a.CustomerID', '=', 'c.CustomerID')
             ->join('Services as s', 'a.ServiceID', '=', 's.ServiceID')
             ->leftJoin('Bikes as b', 'b.CustomerID', '=', 'c.CustomerID')
             ->where('a.MechanicID', $mechanicId)
-            ->whereDate('a.AppointmentDateTime', now()->toDateString())
-            ->where(function($query) {
-                $query->whereNull('a.Status')
-                      ->orWhere('a.Status', '!=', 'Completed');
+
+            // SHOW IF:
+            ->where(function($query) use ($today) {
+
+                // 1. Appointment is today AND not completed
+                $query->whereDate('a.AppointmentDateTime', $today)
+                      ->where(function($q) {
+                          $q->whereNull('a.Status')
+                            ->orWhere('a.Status', 'Not Started')
+                            ->orWhere('a.Status', 'Started');
+                      })
+
+                // OR 2. Appointment is in progress from a previous day
+                ->orWhere(function($q) {
+                    $q->where('a.Status', 'Started');
+                });
             })
+
             ->orderBy('a.AppointmentDateTime', 'asc')
             ->select(
-                'a.AppointmentID', 'a.AppointmentDateTime', 'a.Status',
-                'c.FirstName', 'c.LastName',
+                'a.AppointmentID',
+                'a.AppointmentDateTime',
+                'a.Status',
+                'c.FirstName',
+                'c.LastName',
                 's.ServiceName',
-                'b.Year', 'b.Make', 'b.Model'
+                'b.Year',
+                'b.Make',
+                'b.Model'
             )
             ->get();
 

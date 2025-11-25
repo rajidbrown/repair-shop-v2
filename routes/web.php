@@ -89,7 +89,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/mechanics/{id}/edit', [AddMechanicController::class, 'edit'])->name('mechanics.edit');
     Route::put('/mechanics/{id}', [AddMechanicController::class, 'update'])->name('mechanics.update');
 
-    // Schedule Management
+    // Schedule
     Route::get('/schedule/create', [CreateScheduleController::class, 'showForm'])->name('schedule.create');
     Route::post('/schedule/create', [CreateScheduleController::class, 'store'])->name('schedule.store');
     Route::get('/schedule/edit', [CreateScheduleController::class, 'editAll'])->name('schedule.edit');
@@ -105,27 +105,44 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/customers', [ViewCustomersController::class, 'index'])->name('customers');
 });
 
+
 // ---------------------
 // Customer Routes
 // ---------------------
 Route::prefix('customer')->name('customer.')->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
+    // Appointments
     Route::get('/book-appointment', [BookAppointmentController::class, 'showForm'])->name('appointment.form');
     Route::post('/book-appointment', [BookAppointmentController::class, 'store'])->name('appointment.book');
 
+    // Invoices & Diagnostics
     Route::get('/invoices', [CustomerInvoiceController::class, 'index'])->name('invoices');
     Route::get('/diagnostics', [CustomerDiagnosticsController::class, 'index'])->name('diagnostics');
 
-    Route::get('/my-bike', [BikeController::class, 'showForm'])->name('bike');
-    Route::post('/my-bike', [BikeController::class, 'update'])->name('my_bike.update');
+    // -----------------------------------
+    // Bikes (MULTI-BIKE SYSTEM - FINAL)
+    // -----------------------------------
+    Route::get('/my-bikes', [BikeController::class, 'index'])->name('bikes.index');             // list bikes
+    Route::get('/my-bikes/create', [BikeController::class, 'create'])->name('bikes.create');    // new bike form
+    Route::post('/my-bikes', [BikeController::class, 'store'])->name('bikes.store');            // save new bike
+    Route::get('/my-bikes/{bike}/edit', [BikeController::class, 'edit'])->name('bikes.edit');   // edit form
+    Route::post('/my-bikes/{bike}', [BikeController::class, 'update'])->name('bikes.update');   // update bike
 
+    // (Optional) future delete:
+    // Route::delete('/my-bikes/{bike}', [BikeController::class, 'destroy'])->name('bikes.destroy');
+
+    // Service History
     Route::get('/service-history', [CustomerServiceHistoryController::class, 'index'])->name('service_history');
-    Route::view('/settings', 'customer.settings')->name('settings');
 
+    // Settings & Info
+    Route::view('/settings', 'customer.settings')->name('settings');
     Route::get('/update-info', [CustomerInfoController::class, 'showForm'])->name('update_info');
     Route::post('/update-info', [CustomerInfoController::class, 'update'])->name('update_info.submit');
 
+    // Appointments management
     Route::get('/appointments', [CustomerAppointmentController::class, 'index'])->name('appointments');
     Route::delete('/appointments/{id}', [CustomerAppointmentController::class, 'destroy'])->name('appointments.destroy');
 });
