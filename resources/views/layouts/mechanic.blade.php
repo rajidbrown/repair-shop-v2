@@ -32,7 +32,7 @@
     </main>
 
     <footer class="surface border-t-4 brand-border px-6 py-5 text-center muted">
-        &copy; {{ date('Y') }} Shaded Motorworks — Customer
+        &copy; {{ date('Y') }} Shaded Motorworks — Mechanic
     </footer>
 </body>
 </html>

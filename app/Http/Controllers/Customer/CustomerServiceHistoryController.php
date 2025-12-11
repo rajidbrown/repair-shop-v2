@@ -4,27 +4,33 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 class CustomerServiceHistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $customerId = Session::get('customer_id');
-
-        if (!$customerId) {
-            return redirect()->route('login.customer');
-        }
+        $customerId = session('customer_id'); // customer login session
 
         $history = DB::table('Appointments as A')
             ->join('Services as S', 'A.ServiceID', '=', 'S.ServiceID')
+            ->join('Bikes as B', 'A.BikeID', '=', 'B.BikeID')
+            ->select(
+                'A.AppointmentDateTime',
+                'A.Status',
+                'A.Notes',
+                'S.ServiceName',
+                'B.Make',
+                'B.Model',
+                'B.Mileage'
+            )
             ->where('A.CustomerID', $customerId)
             ->where('A.Status', 'Completed')
-            ->orderBy('A.AppointmentDateTime', 'desc')
-            ->select('A.AppointmentDateTime', 'S.ServiceName', 'A.Notes', 'A.Status')
+            ->orderByDesc('A.AppointmentDateTime')
             ->get();
 
-        return view('customer.service_history', compact('history'));
+        return view('customer.service_history', [
+            'history' => $history,
+        ]);
     }
 }

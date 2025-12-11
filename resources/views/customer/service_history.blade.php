@@ -3,7 +3,7 @@
 @section('title', 'Service History')
 
 @section('content')
-  <div class="max-w-4xl mx-auto px-6 mt-10">
+  <div class="max-w-4xl mx-auto px-6 mt-10 text-white">
     <h2 class="text-3xl font-heading text-yellow-400 text-center border-b-4 border-orange-600 pb-2 mb-8">
       Service History
     </h2>
@@ -11,23 +11,47 @@
     @if ($history->isEmpty())
       <p class="text-center text-gray-400 text-lg">You don't have any completed services yet.</p>
     @else
-      <ul class="space-y-6">
+      <div class="space-y-6">
         @foreach ($history as $item)
-          <li class="bg-gray-900 border-2 border-orange-600 rounded-xl p-6">
-            <p class="text-gray-300 mb-1">
-              <strong class="text-yellow-400">Date:</strong>
+          <div class="bg-[#2a2a2a] border-l-4 border-yellow-400 p-6 rounded-xl shadow hover:shadow-lg transition">
+            
+            <!-- DATE -->
+            <p class="mb-1">
+              <span class="text-yellow-400 font-semibold">Date:</span>
               {{ \Carbon\Carbon::parse($item->AppointmentDateTime)->format('F j, Y g:i A') }}
             </p>
-            <p class="text-gray-300 mb-1">
-              <strong class="text-yellow-400">Service:</strong>
+
+            <!-- BIKE -->
+            <p class="mb-1">
+              <span class="text-yellow-400 font-semibold">Bike:</span>
+              {{ $item->Make }} {{ $item->Model }} — {{ $item->Mileage }} miles
+            </p>
+
+            <!-- SERVICE -->
+            <p class="mb-1">
+              <span class="text-yellow-400 font-semibold">Service:</span>
               {{ $item->ServiceName }}
             </p>
-            <p class="text-gray-400 italic mt-2">
-              {{ $item->Notes ?? 'No notes' }}
+
+            <!-- STATUS -->
+            <p class="mb-1">
+              <span class="text-yellow-400 font-semibold">Status:</span>
+              <span class="italic text-white">{{ $item->Status }}</span>
             </p>
-          </li>
+
+            <!-- NOTES -->
+            <p class="mt-3">
+              <span class="text-yellow-400 font-semibold">Notes:</span>
+              @if (!empty($item->Notes))
+                {{ $item->Notes }}
+              @else
+                <span class="text-gray-300 italic">No notes provided.</span>
+              @endif
+            </p>
+
+          </div>
         @endforeach
-      </ul>
+      </div>
     @endif
   </div>
 @endsection
