@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class CustomerAppointmentController extends Controller
 {
     /**
-     * Show the customer's appointments.
+     * Show the customer's upcoming appointments.
      */
     public function index(Request $request)
     {
@@ -18,11 +18,18 @@ class CustomerAppointmentController extends Controller
             return redirect()->route('login.customer');
         }
 
+        // Show ONLY upcoming, non-completed appointments
+        // IMPORTANT: include NULL status (new appointments)
         $appointments = DB::table('Appointments as a')
             ->join('Services as s', 'a.ServiceID', '=', 's.ServiceID')
             ->join('Mechanics as m', 'a.MechanicID', '=', 'm.MechanicID')
             ->where('a.CustomerID', $customerId)
-            ->orderBy('a.AppointmentDateTime', 'desc')
+            ->where(function ($q) {
+                $q->whereNull('a.Status')
+                  ->orWhere('a.Status', '!=', 'Completed');
+            })
+            ->where('a.AppointmentDateTime', '>=', now())
+            ->orderBy('a.AppointmentDateTime', 'asc')
             ->get([
                 'a.AppointmentID',
                 'a.AppointmentDateTime',
@@ -32,14 +39,15 @@ class CustomerAppointmentController extends Controller
             ]);
 
         return view('customer.appointments', [
-            'appointments'   => $appointments,
-            'deleteSuccess'  => session('deleteSuccess'),
-            'deleteError'    => session('deleteError'),
+            'appointments'  => $appointments,
+            'deleteSuccess' => session('deleteSuccess'),
+            'deleteError'   => session('deleteError'),
         ]);
     }
 
     /**
-     * Delete a specific appointment (only if it belongs to the logged-in customer).
+     * Delete a specific appointment (only if it belongs to the logged-in customer
+     * and is NOT completed).
      */
     public function destroy(Request $request, int $appointmentId)
     {
@@ -52,14 +60,19 @@ class CustomerAppointmentController extends Controller
             $deleted = DB::table('Appointments')
                 ->where('AppointmentID', $appointmentId)
                 ->where('CustomerID', $customerId)
+                ->where(function ($q) {
+                    $q->whereNull('Status')
+                      ->orWhere('Status', '!=', 'Completed');
+                })
                 ->delete();
 
             if ($deleted) {
                 return back()->with('deleteSuccess', 'Appointment deleted successfully.');
             }
-            return back()->with('deleteError', 'Failed to delete appointment.');
+
+            return back()->with('deleteError', 'Unable to delete this appointment.');
         } catch (\Throwable $e) {
-            return back()->with('deleteError', 'Failed to delete appointment.');
+            return back()->with('deleteError', 'Unable to delete this appointment.');
         }
     }
 }

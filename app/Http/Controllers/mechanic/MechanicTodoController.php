@@ -21,31 +21,26 @@ class MechanicTodoController extends Controller
         $appointments = DB::table('Appointments as a')
             ->join('Customers as c', 'a.CustomerID', '=', 'c.CustomerID')
             ->join('Services as s', 'a.ServiceID', '=', 's.ServiceID')
-            ->leftJoin('Bikes as b', 'b.CustomerID', '=', 'c.CustomerID')
+            ->leftJoin('Bikes as b', 'b.BikeID', '=', 'a.BikeID')
             ->where('a.MechanicID', $mechanicId)
-
-            // SHOW IF:
-            ->where(function($query) use ($today) {
-
-                // 1. Appointment is today AND not completed
-                $query->whereDate('a.AppointmentDateTime', $today)
-                      ->where(function($q) {
-                          $q->whereNull('a.Status')
-                            ->orWhere('a.Status', 'Not Started')
-                            ->orWhere('a.Status', 'Started');
-                      })
-
-                // OR 2. Appointment is in progress from a previous day
-                ->orWhere(function($q) {
-                    $q->where('a.Status', 'Started');
-                });
+            ->where(function ($query) use ($today) {
+                $query
+                    ->whereDate('a.AppointmentDateTime', $today)
+                    ->where(function ($q) {
+                        $q->whereNull('a.Status')
+                          ->orWhere('a.Status', 'Not Started')
+                          ->orWhere('a.Status', 'Started');
+                    })
+                    ->orWhere(function ($q) {
+                        $q->where('a.Status', 'Started');
+                    });
             })
-
             ->orderBy('a.AppointmentDateTime', 'asc')
             ->select(
                 'a.AppointmentID',
                 'a.AppointmentDateTime',
                 'a.Status',
+                'a.Notes',
                 'c.FirstName',
                 'c.LastName',
                 's.ServiceName',
@@ -67,16 +62,21 @@ class MechanicTodoController extends Controller
 
         $request->validate([
             'appointment_id' => 'required|integer',
-            'status' => 'required|string'
+            'status'         => 'required|string',
+            'notes'          => 'nullable|string',
         ]);
 
         DB::table('Appointments')
             ->where('AppointmentID', $request->appointment_id)
             ->where('MechanicID', $mechanicId)
             ->update([
-                'Status' => $request->status
+                'Status'    => $request->status,
+                'Notes'     => $request->notes,
+                'UpdatedAt' => now(),
             ]);
 
-        return redirect()->route('mechanic.todo')->with('success', 'Status updated.');
+        return redirect()
+            ->route('mechanic.todo')
+            ->with('success', 'Appointment updated.');
     }
 }
