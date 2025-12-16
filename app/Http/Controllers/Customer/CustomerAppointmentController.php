@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class CustomerAppointmentController extends Controller
 {
     /**
-     * Show the customer's upcoming appointments.
+     * Show the customer's appointments (all NOT completed).
      */
     public function index(Request $request)
     {
@@ -18,8 +18,7 @@ class CustomerAppointmentController extends Controller
             return redirect()->route('login.customer');
         }
 
-        // Show ONLY upcoming, non-completed appointments
-        // IMPORTANT: include NULL status (new appointments)
+        // Match mechanic logic: show anything NOT completed (including NULL)
         $appointments = DB::table('Appointments as a')
             ->join('Services as s', 'a.ServiceID', '=', 's.ServiceID')
             ->join('Mechanics as m', 'a.MechanicID', '=', 'm.MechanicID')
@@ -28,7 +27,6 @@ class CustomerAppointmentController extends Controller
                 $q->whereNull('a.Status')
                   ->orWhere('a.Status', '!=', 'Completed');
             })
-            ->where('a.AppointmentDateTime', '>=', now())
             ->orderBy('a.AppointmentDateTime', 'asc')
             ->get([
                 'a.AppointmentID',
@@ -46,8 +44,7 @@ class CustomerAppointmentController extends Controller
     }
 
     /**
-     * Delete a specific appointment (only if it belongs to the logged-in customer
-     * and is NOT completed).
+     * Delete an appointment (only if NOT completed).
      */
     public function destroy(Request $request, int $appointmentId)
     {
@@ -66,11 +63,9 @@ class CustomerAppointmentController extends Controller
                 })
                 ->delete();
 
-            if ($deleted) {
-                return back()->with('deleteSuccess', 'Appointment deleted successfully.');
-            }
-
-            return back()->with('deleteError', 'Unable to delete this appointment.');
+            return $deleted
+                ? back()->with('deleteSuccess', 'Appointment deleted successfully.')
+                : back()->with('deleteError', 'Unable to delete this appointment.');
         } catch (\Throwable $e) {
             return back()->with('deleteError', 'Unable to delete this appointment.');
         }
