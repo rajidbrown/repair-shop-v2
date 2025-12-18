@@ -12,7 +12,10 @@
 
 <header class="brand-header flex justify-between items-center px-6 py-4 border-b-4 brand-border">
     <div class="flex items-center space-x-4">
-        <button onclick="window.history.back()" class="btn-back">← Back</button>
+        <!-- Dashboard Button -->
+        <a href="{{ route('customer.dashboard') }}" class="btn-back">
+            Dashboard
+        </a>
 
         <a href="{{ route('customer.dashboard') }}" class="brand-title">
             SHADED MOTORWORKS

@@ -9,22 +9,25 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-    <header class="brand-header flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-            <!-- Back Button -->
-            <button onclick="window.history.back()" class="btn-back">← Back</button>
+   <header class="brand-header flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+        <!-- Dashboard Button -->
+        <a href="{{ route('admin.dashboard') }}" class="btn-back">
+            Dashboard
+        </a>
 
-            <!-- Brand Title as Home Link -->
-            <a href="{{ route('home') }}" class="brand-title">
-                SHADED MOTORWORKS
-            </a>
-        </div>
+        <!-- Brand Title as Home Link -->
+        <a href="{{ route('home') }}" class="brand-title">
+            SHADED MOTORWORKS
+        </a>
+    </div>
 
-        <!-- Navigation -->
-        <nav class="space-x-4">
-            <a class="nav-link" href="{{ route('login.admin') }}">Logout</a>
-        </nav>
-    </header>
+    <!-- Navigation -->
+    <nav class="space-x-4">
+        <a class="nav-link" href="{{ route('login.admin') }}">Logout</a>
+    </nav>
+</header>
+
 
     <main class="page">
         @yield('content')

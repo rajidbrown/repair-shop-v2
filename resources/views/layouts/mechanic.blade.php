@@ -11,8 +11,10 @@
 <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
     <header class="brand-header flex justify-between items-center">
         <div class="flex items-center space-x-4">
-            <!-- Back Button -->
-            <button onclick="window.history.back()" class="btn-back">← Back</button>
+             <!-- Dashboard Button -->
+        <a href="{{ route('mechanic.dashboard') }}" class="btn-back">
+            Dashboard
+        </a>
 
             <!-- Brand Title as Home Link -->
             <a href="{{ route('home') }}" class="brand-title">
